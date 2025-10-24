@@ -85,11 +85,13 @@ body{padding:18px}
 <div class="logo" aria-hidden="true">PS</div>
 <div>
 <h1>Pixel Sorters INC.</h1>
-<p>AlgoViz — Interactive algorithm visualizer</p>
+<p>AlgoViz </p>
+<p>Interactive algorithm visualizer</p>
 </div>
 </div>
 <div class="nav-actions">
 <a class="btn" href="#visualizer">Try the Demo</a>
+<a class="btn" hred="#description">Description</a>
 <a class="btn" href="#about">About Us</a>
 <a class="btn" href="#glossary">Glossary</a>
 </div>
@@ -173,6 +175,44 @@ body{padding:18px}
 </div>
 </div>
 </aside>
+</section>
+<section if="description">
+<h2>Algorithm Descriptions</h2>
+<p>Short and simple description to turn code and diagrams into understandable information</p>
+<div div class="grid" style="margin-top:12px">
+    <div class="card">
+        <h3>Bubble Sort</h3>
+        <p>
+            A simple sorting algorithm that works by repeatedly comparing pairs
+            of neighboring elements and swapping them if they are in the wrong order. This 
+            process continues until no more swaps are needed, meaning the list is sorted.
+            The largest values “bubble up” to the end of the list after each pass, which is 
+            how it gets its name. While easy to understand and great for learning, Bubble Sort 
+            is not very efficient for large datasets because it has to make many comparisons and swaps.
+        </p>
+    </div>
+
+<div class="card">
+    <h3>Insertion Sort</h3>
+    <p>
+        A straightforward sorting algorithm that builds a sorted list one element at a time. 
+        It works by taking one item from the unsorted part of the list and inserting it into 
+        its correct position in the sorted part, just like sorting playing cards in your hand. 
+        This process repeats until all elements are in order. Insertion Sort is simple to understand 
+        and efficient for small or nearly sorted datasets, but it becomes slower when working with large amounts of data.
+    </p>
+</div>
+<div class="card">
+    <h3>Binary search</h3>
+    <p>
+        A efficient algorithm used to find a specific value in a sorted list. It works by repeatedly 
+        dividing the list in half and comparing the target value to the middle element. If the target 
+        is smaller, the search continues in the left half; if it’s larger, it continues in the right half. 
+        This process repeats until the value is found or the list can’t be divided any further. Binary Search 
+        is much faster than checking each element one by one, but it only works correctly on data that is already sorted.
+    </p>
+</div>
+</div>
 </section>
 <section id="about">
     <h2>About us</h2>
