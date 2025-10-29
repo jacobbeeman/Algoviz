@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang ="en">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>AlgoViz — Pixel Sorters INC.</title>
+<meta name="description" content="AlgoViz — algorithm visualizer by Pixel Sorters INC. Learn sorting & searching with interactive animations." />
+<style>
+/* Reset-ish */
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%}
+body{
+margin:0;
+font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+color:#0f172a;
+background:linear-gradient(180deg,#f8fafc 0%, #eef2ff 100%);
+-webkit-font-smoothing:antialiased;
+-moz-osx-font-smoothing:grayscale;
+line-height:1.45;
+padding:32px;
+}
+/* Container */
+.container{max-width:1100px;margin:0 auto}
+
+/* Top nav */
+.nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
+.brand{display:flex;gap:12px;align-items:center}
+.logo{
+width:48px;height:48px;border-radius:8px;display:grid;place-items:center;background:linear-gradient(135deg,#7c3aed,#06b6d4);color:white;font-weight:700;font-size:14px
+}
+.brand h1{font-size:18px;margin:0}
+.brand p{margin:0;font-size:12px;color:#334155}
+
+.nav-actions{display:flex;gap:12px;align-items:center}
+.btn{background:#111827;color:white;padding:8px 12px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px}
+.btn.secondary{background:transparent;color:#0f172a;border:1px solid rgba(15,23,42,0.06)}
+
+/* Hero */
+.hero{display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center;margin-bottom:28px}
+.hero-card{background:white;padding:28px;border-radius:12px;box-shadow:0 6px 30px rgba(2,6,23,0.05)}
+.hero h2{margin:0 0 8px 0;font-size:28px}
+.hero p{margin:0;color:#475569}
+
+/* Quick features */
+.features{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}
+.feature{background:#f8fafc;padding:10px 12px;border-radius:10px;font-size:13px;color:#0f172a;border:1px solid rgba(15,23,42,0.035)}
+
+/* Visualizer mock */
+.visualizer{background:linear-gradient(90deg,#0ea5e9 0%, #7c3aed 100%);color:white;padding:18px;border-radius:12px;}
+.vis-header{display:flex;align-items:center;justify-content:space-between}
+.vis-canvas{height:260px;background:linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.06));border-radius:10px;margin-top:12px;display:flex;align-items:flex-end;padding:16px;gap:6px}
+.bar{width:14px;background:white;border-radius:4px;transition:all 300ms cubic-bezier(.2,.9,.3,1)}
+/* Controls */
+.controls{display:flex;flex-direction:column;gap:12px}
+.controls .row{display:flex;gap:8px;align-items:center}
+select,input[type=range]{padding:8px;border-radius:8px;border:1px solid #e6eef9;background:white}
+.control-btns{display:flex;gap:8px}
+.small-btn{padding:8px 10px;border-radius:8px;border:none;background:white;color:#0f172a;font-weight:700}
+
+/* Cards */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}
+.card{background:white;padding:16px;border-radius:10px;box-shadow:0 6px 24px rgba(2,6,23,0.04)}
+.card h3{margin:0 0 6px 0}
+.card p{margin:0;color:#475569;font-size:14px}
+
+/* Footer */
+footer{margin-top:28px;color:#475569;font-size:13px}
+
+/* Responsive */
+@media (max-width:900px){
+.hero{grid-template-columns:1fr}
+.grid{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:600px){
+body{padding:18px}
+.grid{grid-template-columns:1fr}
+.nav{flex-direction:column;align-items:flex-start;gap:12px}
+.hero{gap:16px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<nav class="nav">
+<div class="brand">
+<div class="logo" aria-hidden="true">PS</div>
+<div>
+<h1>Pixel Sorters INC.</h1>
+<p>AlgoViz </p>
+<p>Interactive algorithm visualizer</p>
+</div>
+</div>
+<div class="nav-actions">
+<a class="btn" href="#visualizer">Try the Demo</a>
+<a class="btn" href="#algodescription">Description</a>
+<a class="btn" href="#about">About Us</a>
+<a class="btn" href="#glossary">Glossary</a>
+</div>
+</nav>
+<section class="hero">
+<div class="hero-card">
+<h2>Learn algorithms visually — fast</h2>
+<p>AlgoViz provides clear, step-by-step visualizations of common sorting and searching algorithms. Perfect for students and instructors who want to teach, learn, or demo algorithm behavior.</p>
+<div class="features" aria-hidden="true">
+<div class="feature">Preloaded Algorithms</div>
+<div class="feature">Step-by-step Animations</div>
+<div class="feature">Control Panel</div>
+<div class="feature">Multiple Visualization Styles</div>
+</div>
+
+<div class="grid" style="margin-top:20px">
+<div class="card">
+<h3>Getting Started</h3>
+<p>Select an algorithm and use the control panel to play, pause, or change speed.</p>
+</div>
+<div class="card">
+<h3>For Instructors</h3>
+<p>Use AlgoViz in lectures to demonstrate algorithm complexity and behavior in real time.</p>
+</div>
+<div class="card">
+<h3>For Students</h3>
+<p>Learn by watching and interacting — compare algorithms and dataset sizes to see differences.</p>
+</div>
+</div>
+</div>
+<aside class="visualizer" id="visualizer">
+<div class="vis-header">
+<div>
+<strong>Visualization Demo</strong>
+<div style="font-size:12px;opacity:.85">Bubble Sort — Dataset: 12 elements</div>
+</div>
+<div class="controls">
+<div class="row">
+<label for="algo-select" style="font-size:13px;color:rgba(255,255,255,0.95)">Algorithm</label>
+<select id="algo-select" aria-label="Select Algorithm">
+<option>Bubble Sort</option>
+<option>Insertion Sort</option>
+<option>Selection Sort</option>
+<option>Merge Sort</option>
+<option>Quick Sort</option>
+<option>Binary Search</option>
+</select>
+</div>
+<div class="row">
+<label for="size" style="font-size:13px;color:rgba(255,255,255,0.95)">Size</label>
+<select id="size" aria-label="Select dataset size">
+<option value="10">10</option>
+<option value="25">25</option>
+<option value="50">50</option>
+</select>
+</div>
+</div>
+</div>
+<div class="vis-canvas" id="vis-canvas" role="region" aria-label="Algorithm visualization canvas">
+<!-- Bars are generated via JS; placeholders for layout -->
+<div class="bar" style="height:40px"></div>
+<div class="bar" style="height:96px"></div>
+<div class="bar" style="height:72px"></div>
+<div class="bar" style="height:120px"></div>
+<div class="bar" style="height:64px"></div>
+<div class="bar" style="height:20px"></div>
+<div class="bar" style="height:88px"></div>
+<div class="bar" style="height:52px"></div>
+</div>
+
+<div style="margin-top:12px;display:flex;gap:8px;justify-content:space-between;align-items:center">
+<div class="control-btns">
+<button class="small-btn" id="startBtn">Start</button>
+<button class="small-btn" id="pauseBtn">Pause</button>
+<button class="small-btn" id="resumeBtn">Resume</button>
+<button class="small-btn" id="restartBtn">Restart</button>
+</div>
+<div style="display:flex;align-items:center;gap:8px">
+<label style="font-size:13px;color:rgba(255,255,255,0.95)">Speed</label>
+<input id="speed" type="range" min="1" max="10" value="4" />
+</div>
+</div>
+</aside>
+</section>
+<section id="algodescription">
+<h2>Algorithm Descriptions</h2>
+<p>Short and simple description to turn code and diagrams into understandable information</p>
+<div div class="grid" style="margin-top:12px">
+    <div class="card">
+        <h3>Bubble Sort</h3>
+        <p>
+            A simple sorting algorithm that works by repeatedly comparing pairs
+            of neighboring elements and swapping them if they are in the wrong order. This 
+            process continues until no more swaps are needed, meaning the list is sorted.
+            The largest values “bubble up” to the end of the list after each pass, which is 
+            how it gets its name. While easy to understand and great for learning, Bubble Sort 
+            is not very efficient for large datasets because it has to make many comparisons and swaps.
+        </p>
+    </div>
+
+<div class="card">
+    <h3>Insertion Sort</h3>
+    <p>
+        A straightforward sorting algorithm that builds a sorted list one element at a time. 
+        It works by taking one item from the unsorted part of the list and inserting it into 
+        its correct position in the sorted part, just like sorting playing cards in your hand. 
+        This process repeats until all elements are in order. Insertion Sort is simple to understand 
+        and efficient for small or nearly sorted datasets, but it becomes slower when working with large amounts of data.
+    </p>
+</div>
+<div class="card">
+    <h3>Binary search</h3>
+    <p>
+        A efficient algorithm used to find a specific value in a sorted list. It works by repeatedly 
+        dividing the list in half and comparing the target value to the middle element. If the target 
+        is smaller, the search continues in the left half; if it’s larger, it continues in the right half. 
+        This process repeats until the value is found or the list can’t be divided any further. Binary Search 
+        is much faster than checking each element one by one, but it only works correctly on data that is already sorted.
+    </p>
+</div>
+</div>
+</section>
+<section id="about">
+    <h2>About us</h2>
+    <p>
+        Pixel Sorters Inc. is a dedicated team of aspiring software engineers passionate about 
+        creating educational tools for programmers. Our project, AlgoViz, brings algorithms 
+        to life through visualization, helping learners better understand how code behaves 
+        step by step.
+    </p>
+    <div div class="grid" style="margin-top:12px">
+        <div class="card">
+            <h3>Maliyah Bolean</h3>
+            <h4>Scrum Master</h4>
+            <img src="images/Picture2.png" width="125" height="150">
+            <p>
+                Maliyah Bolen is a sophomore at Frostburg State University majoring in Computer Information Systems with a minor in Data Science. In high school, she studied Interactive Media Production, where she first learned to code games in unity using C#. Nowadays, she is growing her technical skills and knowledge on campus. As Scrum Master, she’s thrilled to be a valuable guide for her team, promoting collaboration to ensure our team will efficiently build an interactive and educational website efficiently. 
+            </p>
+
+        </div>
+        <div class="card">
+            <h3>Donald Ruths</h3>
+            <h4>Project Owner</h4>
+            <img src="images/Picture3.png" width="125" height="150">
+            <p>
+                Donald Ruths is an aspiring software engineer pursuing a degree in Computer Science at Frostburg University. What started as a curiosity for code in his teenage years quickly grew into a passion for building and problem-solving through technology. Donald thrives on turning complex ideas into clean, functional solutions, and as a Product Owner, he focuses on the “big picture” defining what success looks like, aligning goals with user needs, and making sure the finished product delivers real impact. With a strong mix of technical skills and forward-thinking vision, Donald is eager to bring creativity, precision, and drive into this finished product.
+            </p>
+        </div>
+        <div class="card">
+            <h3>Jacob Beeman</h3>
+            <h4>Lead Developer</h4>
+            <img src="images/Picture1.png" width="125" height="150">
+            <p>
+                Jacob Beeman is a junior at Frostburg State University majoring in Computer Science and developed a passion for software engineering through coding Lego robots as a child. As Development Team Lead, he focuses on designing and implementing core features, guiding the development process, and ensuring the team delivers a high-quality, functional product. He enjoys solving technical challenges and creating software that helps users learn and understand complex concepts.
+            </p>
+        </div>
+    </div>
+</section>
+<section id="glossary">
+<h2>Glossary</h2>
+<p>Quick definitions to help new users understand common terms used in AlgoViz.</p>
+<div class="grid" style="margin-top:12px">
+<div class="card">
+<h3>Algorithm</h3>
+<p>A step-by-step set of instructions to perform a task such as sorting or searching.</p>
+</div>
+<div class="card">
+<h3>Binary search</h3>
+<p>A search algorithm that efficiently finds a target value in a sorted dataset by repeatedly dividing the search range in half.</p>
+</div>
+<div class="card">
+<h3>Bubble Sort</h3>
+<p>A simple sorting algorithm that compares and swaps adjacent elements until the dataset is sorted.</p>
+</div>
+<div class="card">
+<h3>Complexity</h3>
+<p>A measure of the efficiency of an algorithm, usually expresses using expressed using Big O notation (e.g., O(n), O(n^2)). It indicates how the algorithm’s performances change as the dataset size increases in terms of time or space usage.</p>
+</div>
+<div class="card">
+<h3>Dataset</h3>
+<p>A structured collection of data values that an algorithm processes. In Algoviz, datasets are visually represented (such as bars or nodes) and are sorted or searched to demonstrate how algorithms function.</p>
+</div>
+<div class="card">
+<h3>Dot Nodes</h3>
+<p>Small circular graphical elements that represent individual data points in a dataset, often used in visualizations of searching algorithms or graph structures.</p>
+</div>
+<div class="card">
+  <h3>Efficient Big O</h3>
+  <p>A measure of an algorithm’s efficiency, describing how its runtime or space requirements grow as the input size increases.</p>
+</div>
+<div class="card">
+  <h3>Element</h3>
+  <p>An individual item or value in a dataset, or a building block in an HTML document or data structure.</p>
+</div>
+<div class="card">
+  <h3>Insertion Sort</h3>
+  <p>A sorting algorithm that builds a sorted array one item at a time by inserting elements into their correct position.</p>
+</div>
+<div class="card">
+  <h3>Node</h3>
+  <p>A basic unit of a data structure, such as a linked list or tree, that contains data and links to other nodes.</p>
+</div>
+<div class="card">
+  <h3>Recursive</h3>
+  <p>A function or algorithm that calls itself repeatedly until a base condition is met.</p>
+</div>
+</div>
+</section>
+
+<footer>
+<small>Pixel Sorters INC. — AlgoViz • Built for class project</small>
+</footer>
+</div>
+<script>
+// lightweight demo behaviors (no algorithm logic) — for prototype interactivity
+const vis = document.getElementById('vis-canvas');
+const startBtn = document.getElementById('startBtn');
+const pauseBtn = document.getElementById('pauseBtn');
+const resumeBtn = document.getElementById('resumeBtn');
+const restartBtn = document.getElementById('restartBtn');
+const speed = document.getElementById('speed');
+const size = document.getElementById('size');
+
+let animationId = null;
+let bars = [];
+let paused = false;
+
+function randomArray(n){
+const arr = Array.from({length:n},()=>Math.floor(Math.random()*120)+8);
+return arr;
+}
+
+function renderBars(values){
+vis.innerHTML = '';
+values.forEach(h => {
+const d = document.createElement('div');
+d.className='bar';
+d.style.height = h + 'px';
+vis.appendChild(d);
+});
+bars = Array.from(document.querySelectorAll('.bar'));
+}
+let demo = randomArray(parseInt(size.value));
+renderBars(demo);
+
+size.addEventListener('change', ()=>{
+demo = randomArray(parseInt(size.value));
+renderBars(demo);
+});
+
+startBtn.addEventListener('click', ()=>{
+if(animationId){ cancelAnimationFrame(animationId); }
+paused=false; stepSort();
+});
+pauseBtn.addEventListener('click', ()=>{ paused=true; });
+resumeBtn.addEventListener('click', ()=>{ if(paused){ paused=false; stepSort(); } });
+restartBtn.addEventListener('click', ()=>{ demo=randomArray(parseInt(size.value)); renderBars(demo); paused=true; });
+let i=0;
+function stepSort(){
+if(paused) return;
+// simulate activity by highlighting two bars and swapping occasionally
+const n = bars.length;
+if(n===0) return;
+bars.forEach(b=>b.style.opacity=1);
+const a = i % n;
+const b = (i+1) % n;
+bars[a].style.transform = 'scaleY(1.04)';
+bars[b].style.transform = 'scaleY(1.04)';
+setTimeout(()=>{
+bars[a].style.transform=''; bars[b].style.transform='';
+}, 300);
+i++;
+const delay = Math.max(40, 300 - (speed.value*20));
+animationId = requestAnimationFrame(()=>setTimeout(stepSort, delay));
+}
+
+</script>
+</body>
+</html>
