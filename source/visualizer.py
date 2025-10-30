@@ -1,0 +1,26 @@
+import time
+
+
+class AlgorithmVisualizer:
+    def __init__(self, algorithms):
+        self.algorithms = algorithms
+        self.current_name = list(algorithms.keys())[0]
+        self.current_algorithm = algorithms[self.current_name]()
+
+    def switch_algorithm(self, name):
+        if name not in self.algorithms:
+            raise ValueError(f"Algorithm '{name}' not found.")
+        self.current_name = name
+        self.current_algorithm = self.algorithms[name]()
+
+    def run(self, delay=0.1):
+        print(f"\nRunning {self.current_name}...\n")
+        for step in self.current_algorithm.run():
+            print(step)
+            time.sleep(delay)
+        print(f"\n✅ {self.current_name} complete.\n")
+
+    def list_algorithms(self):
+        print("Available algorithms:")
+        for name in self.algorithms:
+            print(f"- {name}")
