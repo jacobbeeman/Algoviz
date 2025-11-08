@@ -221,11 +221,10 @@
   function randomArray(n){
     return Array.from({length:n},()=>Math.floor(Math.random()*110)+8);
   }
-
-  // ----------------------
-  // Render functions: bars & nodes
-  // ----------------------
-  function renderBars(arr){
+    
+  // bars & nodes
+  function renderBars(arr)
+  {
     visCanvas.innerHTML = '';
     arr.forEach(v=>{
       const d = document.createElement('div');
@@ -236,7 +235,8 @@
     domEls = Array.from(visCanvas.children);
   }
 
-  function renderNodes(arr){
+  function renderNodes(arr)
+  {
     visCanvas.innerHTML = '';
     arr.forEach(v=>{
       const d = document.createElement('div');
@@ -326,9 +326,10 @@
   }
 
   // ----------------------
-  // Build GSAP timeline from recorded steps
+  // GSAP timeline for each steps
   // ----------------------
-  function buildTimelineForSteps(mode){
+  function buildTimelineForSteps(mode)
+  {
     // reset any previous timeline
     if(timeline){ timeline.kill(); timeline = null; }
     // reset counters display
@@ -336,20 +337,24 @@
 
     timeline = gsap.timeline({ paused:true });
 
-    // Timing constants (fixed speed as requested)
+    // Timing 
     const compareDuration = 0.35;
     const swapDuration = 0.45;
     const pauseBetween = 0.12;
 
-    steps.forEach((st, idx)=>{
-      if(st.compare){
-        // compare: highlight element(s)
-        if(mode === 'bars'){
+    steps.forEach((st, idx)=>
+      {
+      if(st.compare)
+      {
+        // highlight bar element when comparing
+        if(mode === 'bars')
+        {
           const [i,j] = st.compare;
           timeline.to([domEls[i], domEls[j]], { backgroundColor: "#facc15", duration: compareDuration }, "+=0");
           timeline.to([domEls[i], domEls[j]], { backgroundColor: "", duration: compareDuration }, "+=" + pauseBetween);
-        } else {
-          // nodes: highlight mid or single index
+        } else 
+        {
+          // highlight node element
           const [i] = st.compare;
           timeline.to(domEls[i], { scale:1.12, borderColor:"#facc15", duration: compareDuration }, "+=0");
           timeline.to(domEls[i], { scale:1, borderColor:"rgba(15,23,42,0.06)", duration: compareDuration }, "+=" + pauseBetween);
@@ -543,3 +548,4 @@
   </script>
 </body>
 </html>
+
