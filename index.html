@@ -323,11 +323,166 @@ footer {
     }
 }
 
+/* Donation Popup Styling */
+.popup-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-content {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 400px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.5s ease;
+}
+
+.popup-content h2 {
+  font-family: 'Orbitron', sans-serif;
+  color: #0a71ff;
+  margin-bottom: 10px;
+}
+
+.popup-content p {
+  color: #333;
+  font-size: 1rem;
+  margin-bottom: 20px;
+}
+
+.donate-btn {
+  background-color: #0a71ff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.donate-btn:hover {
+  background-color: #ff00ff;
+  box-shadow: 0 0 10px rgba(255, 0, 255, 0.6);
+}
+
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 24px;
+  cursor: pointer;
+  color: #555;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+/* Donation Popup Styling */
+.popup-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-content {
+  position: relative; /* <— this fixes the close button disappearing */
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 400px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.5s ease;
+}
+
+.popup-content h2 {
+  font-family: 'Orbitron', sans-serif;
+  color: #0a71ff;
+  margin-bottom: 10px;
+}
+
+.popup-content p {
+  color: #333;
+  font-size: 1rem;
+  margin-bottom: 20px;
+}
+
+.donate-btn {
+  background-color: #0a71ff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.donate-btn:hover {
+  background-color: #ff00ff;
+  box-shadow: 0 0 10px rgba(255, 0, 255, 0.6);
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 26px;
+  cursor: pointer;
+  color: #444;
+  transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+  color: #ff00ff;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.support-banner {
+  background: linear-gradient(90deg,#0a71ff,#ff00ff);
+  color:#fff;
+  text-align:center;
+  padding:8px 0;
+  font-family:'Orbitron',sans-serif;
+  font-size:0.95rem;
+}
+.support-banner a {
+  color:#fff;
+  font-weight:bold;
+  text-decoration:underline;
+}
+.support-banner a:hover { color:#000; }
+
+
+
+
 </style>
 </head>
 
 <body>
     <div class="container">
+        <!-- Support Banner -->
+  
         <nav class="nav">
             <div class="brand">
                 <div class="logo">
@@ -340,6 +495,7 @@ footer {
                 </div>
             </div>
             <div class="nav-actions">
+                <a href="donate.html" class="btn">Donate</a>
                 <a class="btn" href="#visualizer">Try the Demo</a>
                 <a class="btn" href="#algodescription">Description</a>
                 <a class="btn" href="#codexample">Code Examples</a>
@@ -916,6 +1072,11 @@ int partition(int[] arr, int low, int high) {
             </div>
         </section>
 
+        <!-- Support Banner -->
+  <div class="support-banner">
+    ❤️ Enjoying AlgoViz? <a href="donate.html">Support our work!</a>
+  </div>
+
         <footer>
             <small>Pixel Sorters INC. — AlgoViz • Built for class project</small>
         </footer>
@@ -984,6 +1145,38 @@ int partition(int[] arr, int low, int high) {
         }
 
     </script>
+    <!-- Donation Popup -->
+<div id="donationPopup" class="popup-overlay">
+  <div class="popup-content">
+    <span class="close-btn" onclick="closePopup()">&times;</span>
+    <h2>Support AlgoViz ❤️</h2>
+    <p>Help us keep developing new visual tools for learners!  
+       Every little bit helps maintain hosting and future features.</p>
+    <a href="https://paypal.me/jbeeman14" target="_blank" class="donate-btn">Donate via PayPal</a>
+  </div>
+</div>
+
+<script>
+  // Show popup 2 seconds after page load
+  window.onload = function() {
+    setTimeout(() => {
+      const popup = document.getElementById("donationPopup");
+      popup.style.display = "flex";
+
+      // Automatically close after 8 seconds
+      setTimeout(() => {
+        popup.style.display = "none";
+      }, 8000); // 8 seconds
+    }, 2000); // show after 2 seconds
+  };
+
+  // Manual close function
+  function closePopup() {
+    document.getElementById("donationPopup").style.display = "none";
+  }
+</script>
+
+
 </body>
 
 </html>
