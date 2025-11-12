@@ -43,36 +43,48 @@
 
     /* Visualization area */
     .viz-row{display:flex;gap:16px;align-items:flex-start}
-    .visual
-    {
-      flex:1;
-      min-height:320px;
-      border-radius:10px;
-      padding:14px;
-      background:linear-gradient(90deg, rgba(255,255,255,0.04), rgba(0,0,0,0.02));
-    }
+    .visual 
+  {
+  flex: 1;
+  min-height: 360px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
 
-    /* Canvas area for bars/nodes */
-    #vis-canvas
-    {
-      height:260px;
-      display:flex;
-      align-items:flex-end;
-      justify-content:center;
-      gap:6px;
-      padding:12px;
-      overflow:hidden;
-    }
+    /* Area for bars/nodes */
+    #vis-canvas 
+  {
+  height: 280px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 6px;
+  padding: 16px;
+  flex-wrap: wrap; /* ✅ allows bars to wrap instead of stretching the box */
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #fafafa 0%, #f4f4f9 100%);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.05);
+  overflow: hidden; /* keeps everything neat inside */
+}
 
     /* Bar styles */
-    .bar
-    {
-      width:18px;
-      background:linear-gradient(135deg,var(--primaryA),var(--primaryB));
-      border-radius:6px;
-      transform-origin: bottom;
-      box-shadow: 0 2px 6px rgba(12, 18, 41, 0.08);
-    }
+    .bar 
+  {
+  flex: 1 0 10px; /* auto shrink */
+  max-width: 18px;
+  min-width: 6px;
+  background: linear-gradient(135deg, #f80505, #db4d15);
+  border-radius: 6px;
+  transform-origin: bottom;
+  box-shadow: 0 2px 6px rgba(12, 18, 41, 0.08);
+}
+
 
     /* Node styles */
     .node
@@ -273,7 +285,8 @@
   }
 
   // Insertion sort: record steps (simpler recording)
-  function insertionSortSteps(arr){
+  function insertionSortSteps(arr)
+  {
     const a = arr.slice();
     const s = [];
     for(let i=1;i<a.length;i++){
@@ -281,12 +294,14 @@
       while(j>0){
         s.push({ compare:[j-1,j], array: a.slice() });
         counters.comps++;
-        if(a[j-1] > a[j]){
+        if(a[j-1] > a[j])
+        {
           // swap
           const tmp = a[j-1]; a[j-1] = a[j]; a[j] = tmp;
           s.push({ swap:[j-1,j], array: a.slice() });
           counters.swaps++;
-        } else {
+        } else 
+        {
           break;
         }
         j--;
@@ -405,7 +420,8 @@
   // ----------------------
   // UI: update counters in the DOM
   // ----------------------
-  function updateCountersDisplay(){
+  function updateCountersDisplay()
+  {
     comparisonsLabel.textContent = `Comparisons: ${counters.comps}`;
     swapsLabel.textContent = `Swaps: ${counters.swaps}`;
     iterationLabel.textContent = `Iteration: ${counters.iter}`;
@@ -414,33 +430,39 @@
   // ----------------------
   // Prepare steps based on current mode and algorithm selection
   // ----------------------
-  function prepareStepsAndRender(){
+  function prepareStepsAndRender()
+  {
     // reset counters
     counters = { comps:0, swaps:0, iter:0 };
     steps = [];
 
     const n = parseInt(sizeSelect.value,10) || 20;
 
-    if(modeSelect.value === 'bars'){
+    if(modeSelect.value === 'bars')
+    {
       // Bars mode: sorting algorithms
       elements = randomArray(n);
       renderBars(elements);
 
       // pick algorithm
       const algo = algoSelect.value;
-      if(algo === 'bubble'){
+      if(algo === 'bubble')
+      {
         // record bubble steps (pure JS)
         steps = bubbleSortSteps(elements);
-      } else if(algo === 'insertion'){
+      } else if(algo === 'insertion')
+      {
         steps = insertionSortSteps(elements);
-      } else {
+      } else 
+      {
         // default fallback
         steps = bubbleSortSteps(elements);
       }
       // build timeline
       buildTimelineForSteps('bars');
 
-    } else {
+    } else 
+    {
       // Nodes mode: searching visualization
       // For nodes we generate a sorted array first
       let arr = randomArray(n).sort((a,b)=>a-b);
@@ -449,12 +471,14 @@
 
       // if binary search, pick target (50% chance target exists)
       const algo = algoSelect.value;
-      if(algo === 'binary'){
+      if(algo === 'binary')
+      {
         // choose a random target from array half the time, otherwise random not in list
         const pickExisting = Math.random() < 0.7;
         const target = pickExisting ? elements[Math.floor(Math.random()*elements.length)] : Math.floor(Math.random()*200)+200;
         steps = binarySearchSteps(elements, target);
-      } else {
+      } else 
+      {
         steps = []; // no steps for unknown
       }
       buildTimelineForSteps('nodes');
@@ -468,9 +492,11 @@
   // ----------------------
   // Control handlers
   // ----------------------
-  startBtn.addEventListener('click', ()=>{
+  startBtn.addEventListener('click', ()=>
+  {
     // If no timeline exists (or finished), prepare a new run
-    if(!timeline || timeline.totalProgress() === 1){
+    if(!timeline || timeline.totalProgress() === 1)
+    {
       prepareStepsAndRender();
     }
     if(timeline) timeline.play();
@@ -478,7 +504,8 @@
 
   pauseBtn.addEventListener('click', ()=> { if(timeline) timeline.pause(); });
   resumeBtn.addEventListener('click', ()=> { if(timeline) timeline.play(); });
-  resetBtn.addEventListener('click', ()=>{
+  resetBtn.addEventListener('click', ()=>
+  {
     if(timeline) timeline.pause();
     // re-render the current elements (fresh render)
     if(modeSelect.value === 'bars') renderBars(elements);
@@ -489,13 +516,16 @@
   });
 
   // When user changes mode or algorithm or size, re-render (but do not auto-start)
-  modeSelect.addEventListener('change', ()=> {
+  modeSelect.addEventListener('change', ()=> 
+  {
     // mode changed: re-render immediately to show correct elements
-    if(modeSelect.value === 'bars'){
+    if(modeSelect.value === 'bars')
+    {
       elements = randomArray(parseInt(sizeSelect.value,10));
       renderBars(elements);
       algoSelect.value = 'bubble';
-    } else {
+    } else 
+    {
       elements = randomArray(parseInt(sizeSelect.value,10)).sort((a,b)=>a-b);
       renderNodes(elements);
       algoSelect.value = 'binary';
@@ -506,9 +536,11 @@
     updateCountersDisplay();
   });
 
-  algoSelect.addEventListener('change', ()=> {
+  algoSelect.addEventListener('change', ()=> 
+  {
     // if switching algos within same mode, re-render dataset
-    if(modeSelect.value === 'bars'){
+    if(modeSelect.value === 'bars')
+    {
       elements = randomArray(parseInt(sizeSelect.value,10));
       renderBars(elements);
     } else {
@@ -520,12 +552,15 @@
     updateCountersDisplay();
   });
 
-  sizeSelect.addEventListener('change', ()=> {
+  sizeSelect.addEventListener('change', ()=> 
+  {
     // update preview dataset when size changes
-    if(modeSelect.value === 'bars'){
+    if(modeSelect.value === 'bars')
+    {
       elements = randomArray(parseInt(sizeSelect.value,10));
       renderBars(elements);
-    } else {
+    } else
+    { 
       elements = randomArray(parseInt(sizeSelect.value,10)).sort((a,b)=>a-b);
       renderNodes(elements);
     }
@@ -545,6 +580,41 @@
     updateCountersDisplay();
   })();
 
+// ===============================
+// Flask Backend Implementation
+// ===============================
+// async function fetchAlgorithmSteps(algorithm, array) 
+// {
+//   try {
+//     const response = await fetch("http://127.0.0.1:5000/api/run", 
+//     {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({
+//         algorithm: algorithm, // e.g. "bubble_sort"
+//         data: array
+//       })
+//     });
+
+//     const result = await response.json();
+
+//     if (result.error) 
+//     {
+//       console.error("Backend error:", result.error);
+//       alert("Error from backend: " + result.error);
+//       return [];
+//     }
+
+//     console.log("✅ Received steps from backend:", result.steps);
+//     return result.steps;
+
+//   } catch (error) 
+//   {
+//     console.error("Fetch failed:", error);
+//     alert("Could not connect to backend. Is Flask running?");
+//     return [];
+//   }
+// }
   </script>
 </body>
 </html>
