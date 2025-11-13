@@ -24,7 +24,7 @@ visualizer = AlgorithmVisualizer(ALGORITHMS)
 
 @app.route("/")
 def home():
-    return render_template("Frontend_Animation.html")
+    return "Backend is running!"
 
 @app.route("/api/algorithms", methods=["GET"])
 def list_algorithms():
