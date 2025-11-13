@@ -102,6 +102,7 @@
       border: 3px solid rgba(15,23,42,0.06);
     }
 
+
     /* Controls under the canvas */
     .controls-row{display:flex;justify-content:space-between;align-items:center;margin-top:10px;gap:12px}
     .btn{background:#0f172a;color:white;padding:8px 12px;border-radius:8px;border:none;font-weight:700;cursor:pointer}
@@ -126,6 +127,7 @@
       .viz-row{flex-direction:column}
       .right{width:100%}
     }
+
   </style>
 </head>
 <body>
@@ -156,6 +158,15 @@
         <!-- Canvas -->
         <div id="vis-canvas" role="region" aria-label="Visualization canvas" class="card" style="margin-top:12px"></div>
 
+        <div class="box">
+      <strong>Tips!</strong>
+      <ul>
+        <li>Select "Bars" mode to visualize sorting algorithms like Bubble Sort and Insertion Sort.</li>
+        <li>Select "Nodes" mode to visualize searching algorithms like Binary Search.</li>
+        <li>Use the controls below the visualization to start, pause, resume, or reset the animation.</li>
+        <li>Adjust the number of elements to see how the algorithms perform with different dataset sizes.</li>
+      </div>
+
         <!-- Controls -->
         <div class="controls-row">
           <div style="display:flex;gap:8px">
@@ -169,19 +180,19 @@
           <div style="display:flex;gap:8px;align-items:center">
             <label for="size">Elements</label>
             <select id="size">
+              <option value="10">5</option>
               <option value="10">10</option>
               <option value="20" selected>20</option>
               <option value="30">30</option>
             </select>
           </div>
         </div>
-      </div>
 
       <!-- Right-side info / controls -->
       <aside class="right">
         <div class="panel">
           <strong>What Algorithm?</strong>
-          <div style="margin-top:8px">
+          <div style="margin-top:2px">
             <select id="algoSelect">
               <option value="bubble">Bubble Sort</option>
               <option value="insertion">Insertion Sort</option>
@@ -192,6 +203,7 @@
 
       </aside>
     </div>
+ 
   </div>
 
   <!-- ====================================================================
@@ -263,8 +275,9 @@
   // Algorithm step recorders (pure JS)
   // ----------------------
 
-  // Bubble sort: records compare and swap steps; returns steps array
-  function bubbleSortSteps(arr){
+  // !!Bubble sort: records compare and swap steps; returns steps array
+  function bubbleSortSteps(arr)
+  {
     const a = arr.slice(); // copy
     const s = [];
     const n = a.length;
@@ -284,7 +297,7 @@
     return s;
   }
 
-  // Insertion sort: record steps (simpler recording)
+  // !!Insertion sort: record steps (simpler recording)
   function insertionSortSteps(arr)
   {
     const a = arr.slice();
@@ -336,7 +349,7 @@
         right = mid - 1;
       }
     }
-    // not found
+    // when not found
     return s;
   }
 
@@ -436,7 +449,7 @@
     counters = { comps:0, swaps:0, iter:0 };
     steps = [];
 
-    const n = parseInt(sizeSelect.value,10) || 20;
+    const n = parseInt(sizeSelect.value,5) || 10;
 
     if(modeSelect.value === 'bars')
     {
@@ -521,12 +534,12 @@
     // mode changed: re-render immediately to show correct elements
     if(modeSelect.value === 'bars')
     {
-      elements = randomArray(parseInt(sizeSelect.value,10));
+      elements = randomArray(parseInt(sizeSelect.value,5));
       renderBars(elements);
       algoSelect.value = 'bubble';
     } else 
     {
-      elements = randomArray(parseInt(sizeSelect.value,10)).sort((a,b)=>a-b);
+      elements = randomArray(parseInt(sizeSelect.value,5)).sort((a,b)=>a-b);
       renderNodes(elements);
       algoSelect.value = 'binary';
     }
@@ -541,10 +554,10 @@
     // if switching algos within same mode, re-render dataset
     if(modeSelect.value === 'bars')
     {
-      elements = randomArray(parseInt(sizeSelect.value,10));
+      elements = randomArray(parseInt(sizeSelect.value,5));
       renderBars(elements);
     } else {
-      elements = randomArray(parseInt(sizeSelect.value,10)).sort((a,b)=>a-b);
+      elements = randomArray(parseInt(sizeSelect.value,5)).sort((a,b)=>a-b);
       renderNodes(elements);
     }
     if(timeline){ timeline.kill(); timeline=null; }
@@ -557,11 +570,11 @@
     // update preview dataset when size changes
     if(modeSelect.value === 'bars')
     {
-      elements = randomArray(parseInt(sizeSelect.value,10));
+      elements = randomArray(parseInt(sizeSelect.value,5));
       renderBars(elements);
     } else
     { 
-      elements = randomArray(parseInt(sizeSelect.value,10)).sort((a,b)=>a-b);
+      elements = randomArray(parseInt(sizeSelect.value,5)).sort((a,b)=>a-b);
       renderNodes(elements);
     }
     if(timeline){ timeline.kill(); timeline=null; }
@@ -575,46 +588,10 @@
   (function init()
   {
     // default mode: bars, default algo: bubble, default size: 20
-    elements = randomArray(20);
+    elements = randomArray(5);
     renderBars(elements);
     updateCountersDisplay();
   })();
-
-// ===============================
-// Flask Backend Implementation
-// ===============================
-// async function fetchAlgorithmSteps(algorithm, array) 
-// {
-//   try {
-//     const response = await fetch("http://127.0.0.1:5000/api/run", 
-//     {
-//       method: "POST",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify({
-//         algorithm: algorithm, // e.g. "bubble_sort"
-//         data: array
-//       })
-//     });
-
-//     const result = await response.json();
-
-//     if (result.error) 
-//     {
-//       console.error("Backend error:", result.error);
-//       alert("Error from backend: " + result.error);
-//       return [];
-//     }
-
-//     console.log("✅ Received steps from backend:", result.steps);
-//     return result.steps;
-
-//   } catch (error) 
-//   {
-//     console.error("Fetch failed:", error);
-//     alert("Could not connect to backend. Is Flask running?");
-//     return [];
-//   }
-// }
   </script>
 </body>
 </html>
