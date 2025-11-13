@@ -230,7 +230,7 @@
   // fetch function for backend 
   async function fetchAlgorithmSteps(algorithm, array){
   try {
-    const res = await fetch("/api/run", {
+    const res = await fetch("https://algoviz-1.onrender.com", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ algorithm: algorithm, data: array })
