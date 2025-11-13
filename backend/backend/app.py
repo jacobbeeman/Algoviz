@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
-from visualizer.AlgorithmVisualizer import AlgorithmVisualizer
+from visualizer.AlgorithmicVisualizer import AlgorithmicVisualizer
 from algorithms.sorting import BubbleSort, QuickSort
 from algorithms.searching import LinearSearch, BinarySearch
 from algorithms.pathfinding import BFS, DFS
