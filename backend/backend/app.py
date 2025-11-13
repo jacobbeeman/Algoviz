@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 
 from visualizer.AlgorithmicVisualizer import AlgorithmVisualizer
@@ -7,7 +7,7 @@ from algorithms.searching import LinearSearch, BinarySearch
 from algorithms.pathfinding import BFS, DFS
 
 app = Flask(__name__)
-CORS(app)  # allow your GitHub Pages frontend to call the backend
+CORS(app)
 
 # Map algorithm names to classes
 ALGORITHMS = {
@@ -22,24 +22,16 @@ ALGORITHMS = {
 # Initialize the visualizer
 visualizer = AlgorithmVisualizer(ALGORITHMS)
 
+@app.route("/")
+def home():
+    return render_template("Frontend_Animation.html")
 
 @app.route("/api/algorithms", methods=["GET"])
 def list_algorithms():
-    """Return the list of available algorithms."""
     return jsonify({"algorithms": list(ALGORITHMS.keys())})
-
 
 @app.route("/api/run", methods=["POST"])
 def run_algorithm():
-    """
-    Expected JSON:
-    {
-        "algorithm": "bubble_sort",
-        "data": [5, 1, 4, 2, 8],  # optional, if algorithm requires it
-        "start": 0,              # optional (search / path)
-        "end": 7                 # optional
-    }
-    """
     body = request.get_json()
 
     if not body or "algorithm" not in body:
@@ -50,12 +42,9 @@ def run_algorithm():
     if name not in ALGORITHMS:
         return jsonify({"error": f"Unknown algorithm '{name}'"}), 404
 
-    # Switch algorithm
     visualizer.switch_algorithm(name)
 
-    # Run the algorithm and capture steps from the visualizer
     try:
-        # Pass only arguments your AlgorithmVisualizer supports
         steps = visualizer.run_api(body)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -65,6 +54,6 @@ def run_algorithm():
         "steps": steps
     })
 
-
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    # Use 0.0.0.0 for Render deployment
+    app.run(host="0.0.0.0", port=5000, debug=True)
