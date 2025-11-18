@@ -228,24 +228,34 @@
   let counters = { comps:0, swaps:0, iter:0 };
 
   // fetch function for backend 
-  async function fetchAlgorithmSteps(algorithm, array){
+  async function fetchAlgorithmSteps(algorithm, array) {
   try {
     const res = await fetch("https://algoviz-1.onrender.com/api/run", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ algorithm: algorithm, data: array })
+      body: JSON.stringify({
+        algorithm: algorithm,   // MUST MATCH BACKEND KEY
+        data: array             // MUST BE NAMED "data"
+      })
     });
+
     const result = await res.json();
-    if (result.error) { 
-      alert("Backend error: " + result.error); 
+
+    if (result.error) {
+      console.error("Backend error:", result.error);
+      alert("Backend error: " + result.error);
       return [];
     }
-    return result.steps;
-  } catch(e) {
-    alert("Could not connect to backend. Is Flask running?");
+
+    return result.steps || [];
+
+  } catch (e) {
+    alert("Could not connect to backend.");
+    console.error(e);
     return [];
   }
 }
+
 
 
   // ----------------------
@@ -376,25 +386,37 @@
 
   const n = parseInt(sizeSelect.value,10) || 20;
 
-  if(modeSelect.value === 'bars') {
+  if (modeSelect.value === 'bars') {
+    // generate array and draw bars
     elements = randomArray(n);
     renderBars(elements);
 
+    // correct algorithm mapping
     const algo = algoSelect.value;
-    const algoKey = algo === 'bubble' ? 'bubble_sort' :
-                    algo === 'insertion' ? 'quick_sort' :
-                    'bubble_sort';
+    let algoKey;
 
+    if (algo === 'bubble') algoKey = 'bubble_sort';
+    else if (algo === 'insertion') algoKey = 'insertion_sort';
+    else if (algo === 'quick') algoKey = 'quick_sort';
+    else algoKey = 'bubble_sort'; // fallback
+
+    // fetch steps
     steps = await fetchAlgorithmSteps(algoKey, elements);
     buildTimelineForSteps('bars');
 
   } else {
+    // searching mode
     elements = randomArray(n).sort((a,b)=>a-b);
     renderNodes(elements);
 
-    if(algoSelect.value === 'binary'){
-      steps = await fetchAlgorithmSteps('binary_search', elements);
-    }
+    const algo = algoSelect.value;
+    let algoKey;
+
+    if (algo === 'linear') algoKey = 'linear_search';
+    else if (algo === 'binary') algoKey = 'binary_search';
+    else algoKey = 'linear_search'; // fallback
+
+    steps = await fetchAlgorithmSteps(algoKey, elements);
     buildTimelineForSteps('nodes');
   }
 
