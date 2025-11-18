@@ -57,3 +57,8 @@ def run_algorithm():
 if __name__ == "__main__":
     # Use 0.0.0.0 for Render deployment
     app.run(host="0.0.0.0", port=5000, debug=True)
+
+
+@app.route("/animation")
+def animation():
+    return render_template("Frontend_Animation.html")
