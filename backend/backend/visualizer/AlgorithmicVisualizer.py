@@ -1,15 +1,5 @@
 import time
 
-def run_api(self, parameters):
-    # Your algorithm classes should already produce steps
-    algo = self.current_algorithm()
-
-    # Run algorithm with parameters if needed
-    steps = algo.run(**parameters)
-
-    # Return steps as list of dicts (JSON safe)
-    return steps
-
 class AlgorithmVisualizer:
     def __init__(self, algorithms):
         self.algorithms = algorithms
@@ -21,6 +11,21 @@ class AlgorithmVisualizer:
             raise ValueError(f"Algorithm '{name}' not found.")
         self.current_name = name
         self.current_algorithm = self.algorithms[name]()
+
+    def run_api(self, body):
+        """
+        Called by backend via /api/run.
+        Expects: { "algorithm": "bubble_sort", "data": [...] }
+        """
+        if "data" not in body:
+            raise ValueError("Missing 'data' in request body.")
+
+        data = body["data"]
+
+        # Each algorithm must implement:  run(data)
+        steps = self.current_algorithm.run(data)
+
+        return steps
 
     def run(self, delay=0.1):
         print(f"\nRunning {self.current_name}...\n")
