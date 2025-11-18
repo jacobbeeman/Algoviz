@@ -22,10 +22,6 @@ ALGORITHMS = {
 # Initialize the visualizer
 visualizer = AlgorithmVisualizer(ALGORITHMS)
 
-@app.route("/")
-def home():
-    return "Backend is running!"
-
 @app.route("/api/algorithms", methods=["GET"])
 def list_algorithms():
     return jsonify({"algorithms": list(ALGORITHMS.keys())})
