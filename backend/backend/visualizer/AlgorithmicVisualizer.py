@@ -22,7 +22,7 @@ class AlgorithmVisualizer:
 
         data = body["data"]
 
-        # Each algorithm must implement:  run(data)
+        # Algorithms must implement run(data)
         steps = self.current_algorithm.run(data)
 
         return steps

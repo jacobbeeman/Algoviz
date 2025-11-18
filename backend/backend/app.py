@@ -42,7 +42,12 @@ def run_algorithm():
     if name not in ALGORITHMS:
         return jsonify({"error": f"Unknown algorithm '{name}'"}), 404
 
+    # Switch the current algorithm
     visualizer.switch_algorithm(name)
+
+    # Convert frontend "array" field → visualizer "data" field
+    if "array" in body:
+        body["data"] = body["array"]
 
     try:
         steps = visualizer.run_api(body)
@@ -53,6 +58,7 @@ def run_algorithm():
         "algorithm": name,
         "steps": steps
     })
+
 
 @app.route("/animation")
 def animation():
