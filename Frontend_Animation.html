@@ -8,6 +8,30 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
   <style>
+    /* Prevent inner scrolling on mobile */
+html, body 
+{
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden !important;
+  overflow-y: auto; 
+  width: 100%;
+}
+
+/* Make the whole animation scale to fit */
+.visualizer-wrapper 
+{
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden; /* no scrolling inside */
+}
+
+/* If your canvas or container has a fixed width, make it scale */
+#visualizer, canvas, .container, .animation-area 
+{
+  max-width: 100% !important;
+  width: 100% !important;
+}
     /* Simple reset + layout */
     :root
     {
@@ -429,7 +453,8 @@
       if(st.swap){
         // swap animation: visually swap heights (bars) or swap text (nodes)
         const [i,j] = st.swap;
-        if(mode === 'bars'){
+        if(mode === 'bars')
+        {
           // animate scale and swap heights
           timeline.to([domEls[i], domEls[j]], { scaleY:1.08, duration: 0.12 }, "+=0");
           timeline.call(()=>{
