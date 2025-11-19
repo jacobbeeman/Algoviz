@@ -198,7 +198,7 @@
               <option value="bubble">Bubble Sort</option>
               <option value="insertion">Insertion Sort</option>
               <option value="binary">Binary Search</option>
-              <option value="SelectionSort">Selection Sort</option>
+              <option value="selection">Selection Sort</option>
               <option value="quick">Quick Sort</option>
               <option value="linear">Linear search</option>
             </select>
@@ -654,6 +654,36 @@
 }
       
 
+  // -------------------------------------
+  // ADD THE HELPER FUNCTION RIGHT HERE
+  // -------------------------------------
+  function updateAlgoOptionsForMode(mode) {
+      const sortOptions = `
+         <option value="bubble">Bubble Sort</option>
+         <option value="insertion">Insertion Sort</option>
+          <option value="selection">Selection Sort</option>
+          <option value="quick">Quick Sort</option>
+      `;
+
+      const searchOptions = `
+          <option value="binary">Binary Search</option>
+          <option value="linear">Linear Search</option>
+      `;
+
+     if (mode === "bars") {
+          algoSelect.innerHTML = sortOptions;
+          algoSelect.value = "bubble";
+     } else {
+          algoSelect.innerHTML = searchOptions;
+          algoSelect.value = "binary";
+     }
+  }
+
+
+
+
+
+
   // ----------------------
   // Control handlers
   // ----------------------
@@ -681,41 +711,45 @@
   });
 
   // When user changes mode or algorithm or size, re-render (but do not auto-start)
-  modeSelect.addEventListener('change', ()=> 
-  {
-    // mode changed: re-render immediately to show correct elements
-    if(modeSelect.value === 'bars')
-    {
-      elements = randomArray(parseInt(sizeSelect.value,10));
-      renderBars(elements);
-      algoSelect.value = 'bubble';
-    } else 
-    {
-      elements = randomArray(parseInt(sizeSelect.value,10)).sort((a,b)=>a-b);
-      renderNodes(elements);
-      algoSelect.value = 'binary';
+  modeSelect.addEventListener("change", () => {
+    const mode = modeSelect.value;
+
+    // Update dropdown options
+    updateAlgoOptionsForMode(mode);
+
+    // Re-render the correct visualization
+    const n = parseInt(sizeSelect.value, 10);
+
+    if (mode === "bars") {
+        elements = randomArray(n);
+        renderBars(elements);
+    } else {
+        elements = randomArray(n).sort((a, b) => a - b);
+        renderNodes(elements);
     }
-    // clear timeline
-    if(timeline){ timeline.kill(); timeline=null; }
-    counters = { comps:0, swaps:0, iter:0 };
+
+    // Reset timeline & counters
+    if (timeline) { timeline.kill(); timeline = null; }
+
+    counters = { comps: 0, swaps: 0, iter: 0 };
     updateCountersDisplay();
   });
 
-  algoSelect.addEventListener('change', ()=> 
-  {
-    // if switching algos within same mode, re-render dataset
-    if(modeSelect.value === 'bars')
-    {
-      elements = randomArray(parseInt(sizeSelect.value,10));
-      renderBars(elements);
+  algoSelect.addEventListener("change", () => {
+    const algo = algoSelect.value;
+
+    if (["bubble", "insertion", "selection", "quick"].includes(algo)) {
+        modeSelect.value = "bars";
+        updateAlgoOptionsForMode("bars");
     } else {
-      elements = randomArray(parseInt(sizeSelect.value,10)).sort((a,b)=>a-b);
-      renderNodes(elements);
+        modeSelect.value = "nodes";
+        updateAlgoOptionsForMode("nodes");
     }
-    if(timeline){ timeline.kill(); timeline=null; }
-    counters = { comps:0, swaps:0, iter:0 };
-    updateCountersDisplay();
+
+    // Re-render data based on new mode
+    sizeSelect.dispatchEvent(new Event("change"));
   });
+
 
   // Auto-switch visuals when algorithm changes
 algoSelect.addEventListener("change", () => {
@@ -758,11 +792,15 @@ algoSelect.addEventListener("change", () => {
   // ----------------------
   (function init()
   {
+    // Force algorithm dropdown to match default mode ("bars")
+    updateAlgoOptionsForMode("bars");
+
     // default mode: bars, default algo: bubble, default size: 20
     elements = randomArray(5);
     renderBars(elements);
     updateCountersDisplay();
   })();
+
   </script>
 </body>
 </html>
