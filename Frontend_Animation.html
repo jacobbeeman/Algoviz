@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <!-- GSAP CDN - no npm needed -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+  <style>
+    /* Simple reset + layout */
+    :root
+    {
+      --bg: linear-gradient(180deg,#ffffff 0%, #ffffff 100%);
+      --primaryA: #f80505;
+      --primaryB: #db4d15;
+      --accent: #5b05e6;
+      --muted: #ffffff;
+      --card: #fff;
+      --width: 1100px;
+    }
+    *{box-sizing:border-box}
+    body
+    {
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      background:var(--bg);
+      color:#0f172a;
+      padding:28px;
+      display:flex;
+      justify-content:center;
+    }
+    .wrap{width:100%;max-width:var(--width)}
+    header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+    .brand{display:flex;gap:14px;align-items:center}
+    .logo{width:44px;height:44px;border-radius:8px;display:grid;place-items:center;color:white;font-weight:700;
+      background:linear-gradient(135deg,var(--primaryB),var(--primaryA))}
+    h1{margin:0;font-size:18px}
+    .controls-top{display:flex;gap:8px;align-items:center}
+
+    /* Card */
+    .card{background:var(--card);padding:16px;border-radius:12px;box-shadow:0 6px 24px rgba(2,6,23,0.06);}
+
+    /* Visualization area */
+    .viz-row{display:flex;gap:16px;align-items:flex-start}
+    .visual 
+  {
+  flex: 1;
+  min-height: 360px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+    /* Area for bars/nodes */
+    #vis-canvas 
+  {
+  height: 280px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 6px;
+  padding: 16px;
+  flex-wrap: wrap; /* ✅ allows bars to wrap instead of stretching the box */
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #fafafa 0%, #f4f4f9 100%);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.05);
+  overflow: hidden; /* keeps everything neat inside */
+}
+
+    /* Bar styles */
+    .bar 
+  {
+  flex: 1 0 10px; /* auto shrink */
+  max-width: 18px;
+  min-width: 6px;
+  background: linear-gradient(135deg, #f80505, #db4d15);
+  border-radius: 6px;
+  transform-origin: bottom;
+  box-shadow: 0 2px 6px rgba(12, 18, 41, 0.08);
+}
+
+
+    /* Node styles */
+    .node
+    {
+      width:44px;
+      height:44px;
+      border-radius:50%;
+      background:var(--card);
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      box-shadow: 0 6px 18px rgba(2,6,23,0.06);
+      font-weight:700;
+      color:#0f172a;
+      border: 3px solid rgba(15,23,42,0.06);
+    }
+
+
+    /* Controls under the canvas */
+    .controls-row{display:flex;justify-content:space-between;align-items:center;margin-top:10px;gap:12px}
+    .btn{background:#0f172a;color:white;padding:8px 12px;border-radius:8px;border:none;font-weight:700;cursor:pointer}
+    .btn.secondary{background:white;color:#0f172a;border:1px solid rgba(15,23,42,0.06)}
+    .inline-counters{display:flex;gap:14px;align-items:center;font-weight:700;color:var(--muted)}
+
+    /* Right-side panel */
+    .right
+    {
+      width:320px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    .panel{padding:12px;border-radius:10px;background:var(--card);}
+
+    select{padding:8px;border-radius:8px;border:1px solid #e6eef9;background:white}
+
+    footer{margin-top:18px;color:var(--muted);font-size:13px}
+    @media(max-width:900px)
+    {
+      .viz-row{flex-direction:column}
+      .right{width:100%}
+    }
+
+
+  </style>
+</head>
+<body>
+
+      <div class="controls-top">
+        <!-- Mode toggle: Bars or Nodes -->
+        <label for="mode">What Visual?</label>
+        <select id="mode" aria-label="Select visualization mode">
+          <option value="bars">Bars (Sorting)</option>
+          <option value="nodes">Nodes (Searching)</option>
+        </select>
+      </div>
+    </header>
+
+    <div class="viz-row">
+      <!-- Left: visualization and controls -->
+      <div class="card visual">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="font-weight:800">Visualization</div>
+          <!-- Inline counters (horizontal) -->
+          <div class="inline-counters">
+            <div id="comparisons">Comparisons: 0</div>
+            <div id="swaps">Swaps: 0</div>
+            <div id="iteration">Iteration: 0</div>
+          </div>
+        </div>
+
+        <!-- Canvas -->
+        <div id="vis-canvas" role="region" aria-label="Visualization canvas" class="card" style="margin-top:12px"></div>
+
+        <div class="box">
+      <strong>Tips!</strong>
+      <ul>
+        <li>Select "Bars" mode to visualize sorting algorithms like Bubble Sort and Insertion Sort.</li>
+        <li>Select "Nodes" mode to visualize searching algorithms like Binary Search.</li>
+        <li>Use the controls below the visualization to start, pause, resume, or reset the animation.</li>
+        <li>Adjust the number of elements to see how the algorithms perform with different dataset sizes.</li>
+      </div>
+
+        <!-- Controls -->
+        <div class="controls-row">
+          <div style="display:flex;gap:8px">
+            <button class="btn" id="startBtn">Start</button>
+            <button class="btn secondary" id="pauseBtn">Pause</button>
+            <button class="btn secondary" id="resumeBtn">Resume</button>
+            <button class="btn secondary" id="resetBtn">Reset</button>
+          </div>
+
+          <!-- Size selector -->
+          <div style="display:flex;gap:8px;align-items:center">
+            <label for="size">Elements</label>
+            <select id="size">
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="20" selected>20</option>
+              <option value="30">30</option>
+            </select>
+          </div>
+        </div>
+
+      <!-- Right-side info / controls -->
+      <aside class="right">
+        <div class="panel">
+          <strong>What Algorithm?</strong>
+          <div style="margin-top:2px">
+            <select id="algoSelect">
+              <option value="bubble">Bubble Sort</option>
+              <option value="insertion">Insertion Sort</option>
+              <option value="binary">Binary Search</option>
+            </select>
+          </div>
+        </div>
+
+            <!-- Text PopUP Helper --> 
+<div id="searching msg" 
+     style="text-align:center; 
+            font-weight:800; 
+            margin-top:10px; 
+            font-size:18px; 
+            color:#0f172a;">
+</div>
+
+<div id="arrow" 
+     style="position:absolute; 
+            width:0; 
+            height:0;
+            border-left:10px solid transparent;
+            border-right:10px solid transparent;
+            border-bottom:20px solid #db4d15;
+            display:none;">
+</div>
+      </aside>
+    </div>
+ 
+  </div>
+
+  <!-- ====================================================================
+       JavaScript: algorithm step generator + GSAP timeline animation logic
+       ==================================================================== -->
+  <script>
+  /**************************************************************************
+   * Overview:
+   * - This demo records algorithm "steps" in pure JS (no backend required).
+   * - Steps are objects like { compare:[i,j] } or { swap:[i,j], array: [...] }.
+   * - We build a GSAP timeline from those steps so animations play smoothly.
+   * - Controls: Start / Pause / Resume / Reset. Counters update inline.
+   **************************************************************************/
+
+  // --- UI elements
+  const visCanvas = document.getElementById('vis-canvas');
+  const startBtn = document.getElementById('startBtn');
+  const pauseBtn = document.getElementById('pauseBtn');
+  const resumeBtn = document.getElementById('resumeBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const sizeSelect = document.getElementById('size');
+  const modeSelect = document.getElementById('mode');
+  const algoSelect = document.getElementById('algoSelect');
+
+  const comparisonsLabel = document.getElementById('comparisons');
+  const swapsLabel = document.getElementById('swaps');
+  const iterationLabel = document.getElementById('iteration');
+
+  // --- State variables
+  let elements = [];       // current numeric dataset
+  let domEls = [];         // DOM elements (.bar or .node)
+  let steps = [];          // recorded algorithm steps
+  let timeline = null;     // gsap timeline
+  let counters = { comps:0, swaps:0, iter:0 };
+
+  // ----------------------
+  // Helper: create random array
+  // ----------------------
+  function randomArray(n){
+    return Array.from({length:n},()=>Math.floor(Math.random()*110)+8);
+  }
+    
+  // bars & nodes
+  function renderBars(arr)
+  {
+    visCanvas.innerHTML = '';
+    arr.forEach(v=>{
+      const d = document.createElement('div');
+      d.className = 'bar';
+      d.style.height = v + 'px';
+      visCanvas.appendChild(d);
+    });
+    domEls = Array.from(visCanvas.children);
+  }
+
+  function renderNodes(arr)
+  {
+    visCanvas.innerHTML = '';
+    arr.forEach(v=>{
+      const d = document.createElement('div');
+      d.className = 'node';
+      d.textContent = v;
+      visCanvas.appendChild(d);
+    });
+    domEls = Array.from(visCanvas.children);
+  }
+
+  // ----------------------
+  // Algorithm step recorders (pure JS)
+  // ----------------------
+
+  // adding arrows and messages for searching visualization
+  function pointArrowTo(index) 
+{
+  const el = domEls[index];
+  const rect = el.getBoundingClientRect();
+
+  const arrow = document.getElementById("arrow");
+  arrow.style.display = "block";
+  arrow.style.position = "fixed";
+  arrow.style.left = (rect.left + rect.width/2 - 10) + "px";
+  arrow.style.top = (rect.top - 30) + "px";
+}
+
+  // !!Bubble sort: records compare and swap steps; returns steps array
+  function bubbleSortSteps(arr)
+  {
+    const a = arr.slice(); // copy
+    const s = [];
+    const n = a.length;
+    for(let pass=0; pass<n; pass++){
+      counters.iter = pass+1; // count passes (iterations)
+      for(let j=0;j<n-pass-1;j++){
+        s.push({ compare:[j,j+1], array: a.slice() });
+        counters.comps++;
+        if(a[j] > a[j+1]){
+          // perform swap
+          const tmp = a[j]; a[j] = a[j+1]; a[j+1] = tmp;
+          s.push({ swap:[j,j+1], array: a.slice() });
+          counters.swaps++;
+        }
+      }
+    }
+    return s;
+  }
+
+  // !!Insertion sort: record steps (simpler recording)
+  function insertionSortSteps(arr)
+  {
+    const a = arr.slice();
+    const s = [];
+    for(let i=1;i<a.length;i++){
+      let j = i;
+      while(j>0){
+        s.push({ compare:[j-1,j], array: a.slice() });
+        counters.comps++;
+        if(a[j-1] > a[j])
+        {
+          // swap
+          const tmp = a[j-1]; a[j-1] = a[j]; a[j] = tmp;
+          s.push({ swap:[j-1,j], array: a.slice() });
+          counters.swaps++;
+        } else 
+        {
+          break;
+        }
+        j--;
+      }
+    }
+    return s;
+  }
+
+  // Binary search steps for nodes (visual, returns steps showing mid checks)
+  // Note: binary search needs a sorted array
+  function binarySearchSteps(arr, target)
+  {
+    const a = arr.slice().sort((x,y)=>x-y);
+    const s = [];
+    let left = 0, right = a.length-1;
+    while(left<=right)
+    {
+      const mid = Math.floor((left+right)/2);
+      s.push({ compare:[mid], array: a.slice() });
+      counters.comps++;
+      if(a[mid] === target)
+      {
+        s.push({ found: mid, array: a.slice() });
+        return s;
+      } 
+      else if(a[mid] < target)
+      {
+        left = mid + 1;
+      } 
+      else 
+      {
+        right = mid - 1;
+      }
+    }
+    // when not found
+    return s;
+  }
+
+  // ----------------------
+  // GSAP timeline for each steps
+  // ----------------------
+  function buildTimelineForSteps(mode)
+  {
+    // reset any previous timeline
+    if(timeline){ timeline.kill(); timeline = null; }
+    // reset counters display
+    updateCountersDisplay();
+
+    timeline = gsap.timeline({ paused:true });
+
+    // Timing 
+    const compareDuration = 0.35;
+    const swapDuration = 0.45;
+    const pauseBetween = 0.12;
+
+    steps.forEach((st, idx)=>
+      {
+      if(st.compare)
+      {
+        // highlight bar element when comparing
+        if(mode === 'bars')
+        {
+          const [i,j] = st.compare;
+          timeline.to([domEls[i], domEls[j]], { backgroundColor: "#facc15", duration: compareDuration }, "+=0");
+          timeline.to([domEls[i], domEls[j]], { backgroundColor: "", duration: compareDuration }, "+=" + pauseBetween);
+        } else 
+        {
+          // highlight node element
+          const [i] = st.compare;
+          timeline.to(domEls[i], { scale:1.12, borderColor:"#facc15", duration: compareDuration }, "+=0");
+          timeline.to(domEls[i], { scale:1, borderColor:"rgba(15,23,42,0.06)", duration: compareDuration }, "+=" + pauseBetween);
+        }
+        // increment comparisons counter when timeline reaches this point
+        timeline.call(()=> { counters.comps++; updateCountersDisplay(); });
+      }
+
+      if(st.swap){
+        // swap animation: visually swap heights (bars) or swap text (nodes)
+        const [i,j] = st.swap;
+        if(mode === 'bars'){
+          // animate scale and swap heights
+          timeline.to([domEls[i], domEls[j]], { scaleY:1.08, duration: 0.12 }, "+=0");
+          timeline.call(()=>{
+            const h1 = domEls[i].style.height;
+            domEls[i].style.height = domEls[j].style.height;
+            domEls[j].style.height = h1;
+          });
+          timeline.to([domEls[i], domEls[j]], { scaleY:1, duration: 0.12, backgroundColor:"#22c55e" });
+          timeline.call(()=> { counters.swaps++; updateCountersDisplay(); });
+          timeline.to([domEls[i], domEls[j]], { backgroundColor:"", duration: 0.12 }, "+=" + pauseBetween);
+        } else {
+          // nodes: swap content text
+          timeline.to([domEls[i], domEls[j]], { scale:1.12, duration:0.12 }, "+=0");
+          timeline.call(()=>{
+            const t = domEls[i].textContent; domEls[i].textContent = domEls[j].textContent; domEls[j].textContent = t;
+          });
+          timeline.call(()=> { counters.swaps++; updateCountersDisplay(); });
+          timeline.to([domEls[i], domEls[j]], { scale:1, duration:0.12 }, "+=" + pauseBetween);
+        }
+      }
+
+      if(st.found){
+        const i = st.found;
+        timeline.to(domEls[i], { boxShadow: "0 0 0 6px rgba(16,185,129,0.18)", duration:0.4 });
+        timeline.call(()=> { /* found - no counters change here */ });
+      }
+
+      // small iteration step point
+      timeline.call(()=> { counters.iter++; updateCountersDisplay(); });
+    });
+
+    // final call to ensure counters show final values
+    timeline.call(()=> updateCountersDisplay());
+  }
+
+  // ----------------------
+  // UI: update counters in the DOM
+  // ----------------------
+  function updateCountersDisplay()
+  {
+    comparisonsLabel.textContent = `Comparisons: ${counters.comps}`;
+    swapsLabel.textContent = `Swaps: ${counters.swaps}`;
+    iterationLabel.textContent = `Iteration: ${counters.iter}`;
+  }
+
+  // ----------------------
+  // Prepare steps based on current mode and algorithm selection
+  // ----------------------
+  function prepareStepsAndRender()
+  {
+    // reset counters
+    counters = { comps:0, swaps:0, iter:0 };
+    steps = [];
+
+    const n = parseInt(sizeSelect.value,10) || 10;
+
+    if(modeSelect.value === 'bars')
+    {
+      // Bars mode: sorting algorithms
+      elements = randomArray(n);
+      renderBars(elements);
+
+      // pick algorithm
+      const algo = algoSelect.value;
+      if(algo === 'bubble')
+      {
+        // record bubble steps (pure JS)
+        steps = bubbleSortSteps(elements);
+      } else if(algo === 'insertion')
+      {
+        steps = insertionSortSteps(elements);
+      } else 
+      {
+        // default fallback
+        steps = bubbleSortSteps(elements);
+      }
+      // build timeline
+      buildTimelineForSteps('bars');
+
+    } else 
+    {
+      // Nodes mode: searching visualization
+      // For nodes we generate a sorted array first
+      let arr = randomArray(n).sort((a,b)=>a-b);
+      elements = arr.slice();
+      renderNodes(elements);
+
+      // if binary search, pick target (50% chance target exists)
+      const algo = algoSelect.value;
+      if(algo === 'binary')
+      {
+        // choose a random target from array half the time, otherwise random not in list
+        const pickExisting = Math.random() < 0.7;
+        const target = pickExisting ? elements[Math.floor(Math.random()*elements.length)] : Math.floor(Math.random()*200)+200;
+        steps = binarySearchSteps(elements, target);
+      } else 
+      {
+        steps = []; // no steps for unknown
+      }
+      buildTimelineForSteps('nodes');
+    }
+
+    // reset iteration counter (timeline will call increment functions as it plays)
+    counters.iter = 0;
+    updateCountersDisplay();
+  }
+
+  // ----------------------
+  // Control handlers
+  // ----------------------
+  startBtn.addEventListener('click', ()=>
+  {
+    // If no timeline exists (or finished), prepare a new run
+    if(!timeline || timeline.totalProgress() === 1)
+    {
+      prepareStepsAndRender();
+    }
+    if(timeline) timeline.play();
+  });
+
+  pauseBtn.addEventListener('click', ()=> { if(timeline) timeline.pause(); });
+  resumeBtn.addEventListener('click', ()=> { if(timeline) timeline.play(); });
+  resetBtn.addEventListener('click', ()=>
+  {
+    if(timeline) timeline.pause();
+    // re-render the current elements (fresh render)
+    if(modeSelect.value === 'bars') renderBars(elements);
+    else renderNodes(elements);
+    // reset counters
+    counters = { comps:0, swaps:0, iter:0 };
+    updateCountersDisplay();
+  });
+
+  // When user changes mode or algorithm or size, re-render (but do not auto-start)
+  modeSelect.addEventListener('change', ()=> 
+  {
+    // mode changed: re-render immediately to show correct elements
+    if(modeSelect.value === 'bars')
+    {
+      elements = randomArray(parseInt(sizeSelect.value,10));
+      renderBars(elements);
+      algoSelect.value = 'bubble';
+    } else 
+    {
+      elements = randomArray(parseInt(sizeSelect.value,10)).sort((a,b)=>a-b);
+      renderNodes(elements);
+      algoSelect.value = 'binary';
+    }
+    // clear timeline
+    if(timeline){ timeline.kill(); timeline=null; }
+    counters = { comps:0, swaps:0, iter:0 };
+    updateCountersDisplay();
+  });
+
+  algoSelect.addEventListener('change', ()=> 
+  {
+    // if switching algos within same mode, re-render dataset
+    if(modeSelect.value === 'bars')
+    {
+      elements = randomArray(parseInt(sizeSelect.value,10));
+      renderBars(elements);
+    } else {
+      elements = randomArray(parseInt(sizeSelect.value,10)).sort((a,b)=>a-b);
+      renderNodes(elements);
+    }
+    if(timeline){ timeline.kill(); timeline=null; }
+    counters = { comps:0, swaps:0, iter:0 };
+    updateCountersDisplay();
+  });
+
+  sizeSelect.addEventListener('change', ()=> 
+  {
+    // update preview dataset when size changes
+    if(modeSelect.value === 'bars')
+    {
+      elements = randomArray(parseInt(sizeSelect.value,10));
+      renderBars(elements);
+    } else
+    { 
+      elements = randomArray(parseInt(sizeSelect.value,10)).sort((a,b)=>a-b);
+      renderNodes(elements);
+    }
+    if(timeline){ timeline.kill(); timeline=null; }
+    counters = { comps:0, swaps:0, iter:0 };
+    updateCountersDisplay();
+  });
+
+  // ----------------------
+  // Initial render (20 bars default)
+  // ----------------------
+  (function init()
+  {
+    // default mode: bars, default algo: bubble, default size: 20
+    elements = randomArray(5);
+    renderBars(elements);
+    updateCountersDisplay();
+  })();
+  </script>
+</body>
+</html>
+
