@@ -658,27 +658,24 @@
   // ADD THE HELPER FUNCTION RIGHT HERE
   // -------------------------------------
   function updateAlgoOptionsForMode(mode) {
-      const sortOptions = `
-         <option value="bubble">Bubble Sort</option>
-         <option value="insertion">Insertion Sort</option>
-          <option value="selection">Selection Sort</option>
-          <option value="quick">Quick Sort</option>
-      `;
+  // clear options
+  algoSelect.innerHTML = "";
 
-      const searchOptions = `
-          <option value="binary">Binary Search</option>
-          <option value="linear">Linear Search</option>
-      `;
-
-     if (mode === "bars") {
-          algoSelect.innerHTML = sortOptions;
-          algoSelect.value = "bubble";
-     } else {
-          algoSelect.innerHTML = searchOptions;
-          algoSelect.value = "binary";
-     }
+  if (mode === "nodes") {
+    // Searching algorithms only
+    algoSelect.add(new Option("Binary Search", "binary"));
+    algoSelect.add(new Option("Linear Search", "linear"));
+  } else {
+    // Sorting algorithms only
+    algoSelect.add(new Option("Bubble Sort", "bubble"));
+    algoSelect.add(new Option("Insertion Sort", "insertion"));
+    algoSelect.add(new Option("Selection Sort", "selection"));
+    algoSelect.add(new Option("Quick Sort", "quick"));
   }
 
+  // select the first option (no .value forcing elsewhere)
+  algoSelect.selectedIndex = 0;
+}
 
 
 
@@ -711,63 +708,71 @@
   });
 
   // When user changes mode or algorithm or size, re-render (but do not auto-start)
-  modeSelect.addEventListener("change", () => {
-    const mode = modeSelect.value;
+  modeSelect.addEventListener('change', () => {
+  const mode = modeSelect.value;
 
-    // Update dropdown options
-    updateAlgoOptionsForMode(mode);
+  // rebuild algorithm dropdown for the chosen mode
+  updateAlgoOptionsForMode(mode);
 
-    // Re-render the correct visualization
-    const n = parseInt(sizeSelect.value, 10);
+  // render appropriate preview dataset
+  const n = parseInt(sizeSelect.value, 10) || 20;
+  if (mode === 'bars') {
+    elements = randomArray(n);
+    renderBars(elements);
+  } else {
+    elements = randomArray(n).sort((a, b) => a - b);
+    renderNodes(elements);
+  }
 
-    if (mode === "bars") {
-        elements = randomArray(n);
-        renderBars(elements);
-    } else {
-        elements = randomArray(n).sort((a, b) => a - b);
-        renderNodes(elements);
-    }
-
-    // Reset timeline & counters
-    if (timeline) { timeline.kill(); timeline = null; }
-
-    counters = { comps: 0, swaps: 0, iter: 0 };
-    updateCountersDisplay();
-  });
-
-  algoSelect.addEventListener("change", () => {
-    const algo = algoSelect.value;
-
-    if (["bubble", "insertion", "selection", "quick"].includes(algo)) {
-        modeSelect.value = "bars";
-        updateAlgoOptionsForMode("bars");
-    } else {
-        modeSelect.value = "nodes";
-        updateAlgoOptionsForMode("nodes");
-    }
-
-    // Re-render data based on new mode
-    sizeSelect.dispatchEvent(new Event("change"));
+  // reset any running timeline and counters
+  if (timeline) { timeline.kill(); timeline = null; }
+  counters = { comps: 0, swaps: 0, iter: 0 };
+  updateCountersDisplay();
   });
 
 
-  // Auto-switch visuals when algorithm changes
-algoSelect.addEventListener("change", () => {
-    const algo = algoSelect.value;
 
-    // Sorting algorithms → Bars mode
-    if (algo === "bubble" || algo === "insertion" || algo === "selection") {
-        modeSelect.value = "bars";
+
+
+  algoSelect.addEventListener('change', () => {
+  const algo = algoSelect.value;
+
+  // If user picked a sorting algo but the current mode is nodes, switch mode to bars
+  if (["bubble", "insertion", "selection", "quick"].includes(algo)) {
+    if (modeSelect.value !== "bars") {
+      modeSelect.value = "bars";
+      updateAlgoOptionsForMode("bars"); // this will replace the dropdown options with sorts
     }
+  }
 
-    // Searching algorithms → Nodes mode
-    if (algo === "binary") {
-        modeSelect.value = "nodes";
+  // If user picked a search algo but current mode is bars, switch mode to nodes
+  if (["binary", "linear"].includes(algo)) {
+    if (modeSelect.value !== "nodes") {
+      modeSelect.value = "nodes";
+      updateAlgoOptionsForMode("nodes");
     }
+  }
 
-    // Force re-render so visuals update instantly
-    sizeSelect.dispatchEvent(new Event("change"));
-});
+  // Re-render preview elements to match mode and current size
+  const n = parseInt(sizeSelect.value, 10) || 20;
+  if (modeSelect.value === "bars") {
+    elements = randomArray(n);
+    renderBars(elements);
+  } else {
+    elements = randomArray(n).sort((a,b)=>a-b);
+    renderNodes(elements);
+  }
+
+  // Reset timeline/counters and prepare the steps for the newly selected algo
+  if (timeline) { timeline.kill(); timeline = null; }
+  counters = { comps: 0, swaps: 0, iter: 0 };
+  updateCountersDisplay();
+
+  // build the steps (so Prepare+Play will work immediately if user hits start)
+  prepareStepsAndRender();
+  });
+
+
 
   sizeSelect.addEventListener
   ('change', ()=> 
@@ -790,15 +795,15 @@ algoSelect.addEventListener("change", () => {
   // ----------------------
   // Initial render (20 bars default)
   // ----------------------
-  (function init()
-  {
-    // Force algorithm dropdown to match default mode ("bars")
-    updateAlgoOptionsForMode("bars");
+  (function init() {
+  // start in bars mode
+  modeSelect.value = "bars";
+  updateAlgoOptionsForMode("bars");
 
-    // default mode: bars, default algo: bubble, default size: 20
-    elements = randomArray(5);
-    renderBars(elements);
-    updateCountersDisplay();
+  // initial elements preview
+  elements = randomArray(5);
+  renderBars(elements);
+  updateCountersDisplay();
   })();
 
   </script>
