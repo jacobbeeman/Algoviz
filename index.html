@@ -638,6 +638,43 @@ footer {
   }
 }
 
+/* Normal wrapper */
+.animation-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Hint text */
+.tap-fullscreen {
+  text-align: center;
+  color: #555;
+  font-size: 14px;
+}
+
+/* FULLSCREEN MODE */
+.fullscreen-active {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: black;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Make iframe fill the screen */
+.fullscreen-active iframe {
+  width: 100vw !important;
+  height: 100vh !important;
+  border-radius: 0 !important;
+}
+
 
 </style>
 </head>
@@ -712,25 +749,21 @@ footer {
   </div>
 </section>
 
-
-    
 <section id="animation">
   <h2>Visualization</h2>
 
-  <div class="animation-wrapper">
+  <div id="fullscreen-container" class="animation-wrapper">
       <iframe 
+          id="visualizer-frame"
           src="Frontend_Animation.html"
           width="600"
           height="600"
           style="border:none; border-radius:10px;">
       </iframe>
   </div>
+
+  <p class="tap-fullscreen">📲 Tap the visualizer to go fullscreen</p>
 </section>
-
-
-
-
-            
 
 
         <!--Description part-->
@@ -1318,6 +1351,25 @@ int partition(int[] arr, int low, int high) {
   function closePopup() {
     document.getElementById("donationPopup").style.display = "none";
   }
+</script>
+
+<script>
+const container = document.getElementById("fullscreen-container");
+const frame = document.getElementById("visualizer-frame");
+
+let isFullscreen = false;
+
+container.addEventListener("click", () => {
+    if (!isFullscreen) {
+        // ENTER FULLSCREEN
+        container.classList.add("fullscreen-active");
+        isFullscreen = true;
+    } else {
+        // EXIT FULLSCREEN
+        container.classList.remove("fullscreen-active");
+        isFullscreen = false;
+    }
+});
 </script>
 
 
