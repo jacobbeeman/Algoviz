@@ -544,10 +544,58 @@ footer {
   }
 }
 
+/* ===========================
+   🌟 VISUALIZER MOBILE FIX
+   Makes the animation section clean on all smartphones
+   =========================== */
 
+@media (max-width: 768px) {
 
+  /* Vis container */
+  #animation {
+    padding: 18px !important;
+    margin-top: 20px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #0a71ff10, #ff00ff10);
+    width: 100%;
+    text-align: center;
+  }
 
+  /* Title */
+  #animation h2 {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+  }
 
+  /* Visualizer iframe */
+  #animation iframe {
+    width: 100% !important;
+    max-width: 100%;
+    height: 320px !important;
+    border-radius: 12px;
+    border: none;
+    overflow: hidden;
+    background: #111; /* looks cleaner on mobile */
+  }
+
+  /* Make dropdown inside iframe readable */
+  iframe * select {
+    font-size: 1rem !important;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 420px) {
+
+  #animation iframe {
+    height: 260px !important;
+  }
+
+  #animation h2 {
+    font-size: 1.1rem;
+  }
+}
 
 </style>
 </head>
