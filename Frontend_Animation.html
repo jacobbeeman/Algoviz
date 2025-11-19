@@ -198,6 +198,7 @@
               <option value="bubble">Bubble Sort</option>
               <option value="insertion">Insertion Sort</option>
               <option value="binary">Binary Search</option>
+              <option value="selectionSort">Selection Sort</option>
             </select>
           </div>
         </div>
@@ -385,6 +386,42 @@
     return s;
   }
 
+// Selection Sort (in-place)
+  function selectionSortSteps(arr) {
+    const a = arr.slice();
+    const s = [];
+
+    for (let i = 0; i < a.length - 1; i++) {
+     let min = i;
+
+     // find smallest in the rest of array
+      for (let j = i + 1; j < a.length; j++) {
+        s.push({ compare:[min, j], array: a.slice() });
+        counters.comps++;
+
+       if (a[j] < a[min]) {
+         min = j;
+       }
+     }
+
+    // swap smallest into place
+      if (min !== i) {
+        const temp = a[i];
+        a[i] = a[min];
+        a[min] = temp;
+
+        s.push({ swap:[i, min], array: a.slice() });
+        counters.swaps++;
+     }
+   }
+
+   return s;
+  }
+
+
+
+
+
   // ----------------------
   // GSAP timeline for each steps
   // ----------------------
@@ -498,7 +535,10 @@
       } else if(algo === 'insertion')
       {
         steps = insertionSortSteps(elements);
-      } else 
+      } else if(algo === 'selection')
+      {
+        steps = selectionSortSteps(elements);
+      }else
       {
         // default fallback
         steps = bubbleSortSteps(elements);
