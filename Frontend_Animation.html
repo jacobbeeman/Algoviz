@@ -73,21 +73,6 @@
   overflow: hidden; /* keeps everything neat inside */
 }
 
-/* Highlight animation for comparisons/swaps for bar*/
-.bar.highlight 
-{
-  background: #65d84e; 
-  animation: upAndDownScale 0.6s ease-in-out;
-}
-
-@keyframes upAndDownScale 
-{
-  0%   { transform: scale(1); }
-  50%  { transform: scale(1.2); }
-  100% { transform: scale(1); }
-}
-
-
     /* Bar styles */
     .bar 
   {
@@ -143,6 +128,8 @@
       .right{width:100%}
     }
   </style>
+
+  
 </head>
 <body>
 
@@ -211,7 +198,7 @@
               <option value="bubble">Bubble Sort</option>
               <option value="insertion">Insertion Sort</option>
               <option value="binary">Binary Search</option>
-              <option value="selectionSort">Selection Sort</option>
+              <option value="SelectionSort">Selection Sort</option>
             </select>
           </div>
         </div>
@@ -358,6 +345,8 @@
     }
     return s;
   }
+
+
 
   // Binary search steps for nodes (visual, returns steps showing mid checks)
   // Note: binary search needs a sorted array
@@ -641,7 +630,26 @@
     updateCountersDisplay();
   });
 
-  sizeSelect.addEventListener('change', ()=> 
+  // Auto-switch visuals when algorithm changes
+algoSelect.addEventListener("change", () => {
+    const algo = algoSelect.value;
+
+    // Sorting algorithms → Bars mode
+    if (algo === "bubble" || algo === "insertion" || algo === "selection") {
+        modeSelect.value = "bars";
+    }
+
+    // Searching algorithms → Nodes mode
+    if (algo === "binary") {
+        modeSelect.value = "nodes";
+    }
+
+    // Force re-render so visuals update instantly
+    sizeSelect.dispatchEvent(new Event("change"));
+});
+
+  sizeSelect.addEventListener
+  ('change', ()=> 
   {
     // update preview dataset when size changes
     if(modeSelect.value === 'bars')
