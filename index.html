@@ -409,9 +409,193 @@ footer {
   to { opacity: 1; transform: scale(1); }
 }
 
+/* ===========================
+   🌟 FULL MOBILE FIX PATCH 
+   Makes the entire site look clean on small screens
+   =========================== */
 
+@media (max-width: 768px) {
 
+  /* Make page padding smaller */
+  body {
+    padding: 16px;
+  }
 
+  /* Keep everything centered */
+  .container {
+    width: 100%;
+    padding: 0;
+  }
+
+  /* ---------------- HEADER FIX ---------------- */
+  .nav {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+  }
+
+  .brand {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .brand h1 {
+    font-size: 1.4rem;
+  }
+
+  .brand p {
+    font-size: 0.9rem;
+  }
+
+  /* Nav buttons stack cleanly */
+  .nav-actions {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .nav-actions .btn {
+    width: 100%;
+    max-width: 280px;
+    text-align: center;
+  }
+
+  /* ---------------- HERO FIX ---------------- */
+  .hero {
+    grid-template-columns: 1fr !important;
+    text-align: center;
+    margin-top: 10px;
+    gap: 25px;
+  }
+
+  .hero-card {
+    padding: 20px !important;
+  }
+
+  .hero-card p {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .features-list {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* ---------------- HEADER ANIMATION FIX ---------------- */
+  h1.gradient {
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+  }
+
+  /* ---------------- IFRAME FIX ---------------- */
+  #animation iframe {
+    width: 100%;
+    height: 320px !important;
+  }
+
+  #animation {
+    padding: 15px;
+  }
+
+  /* ---------------- GRID FIX ---------------- */
+  .grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px;
+  }
+
+  /* ---------------- CARDS FIX ---------------- */
+  .card {
+    padding: 15px;
+  }
+
+  /* ---------------- CODE BLOCK FIX ---------------- */
+  pre, code {
+    font-size: 0.8rem;
+    padding: 8px;
+  }
+
+  /* ---------------- DONATION POPUP FIX ---------------- */
+  .popup-content {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .close-btn {
+    top: 5px;
+    right: 10px;
+  }
+
+}
+
+/* Even smaller screens (iPhone SE / old Android) */
+@media (max-width: 420px) {
+
+  h1.gradient {
+    font-size: 1.4rem;
+  }
+
+  .nav-actions .btn {
+    font-size: 0.8rem;
+    padding: 8px 10px;
+  }
+
+  #animation iframe {
+    height: 260px !important;
+  }
+}
+
+/* ===========================
+   🌟 VISUALIZER MOBILE FIX
+   Makes the animation section clean on all smartphones
+   =========================== */
+
+@media (max-width: 768px) {
+
+  /* Vis container */
+  #animation {
+    padding: 18px !important;
+    margin-top: 20px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #0a71ff10, #ff00ff10);
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Title */
+  #animation h2 {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+  }
+
+  /* Visualizer iframe */
+  #animation iframe {
+    width: 100% !important;
+    max-width: 100%;
+    height: 320px !important;
+    border-radius: 12px;
+    border: none;
+    overflow: hidden;
+    background: #111; /* looks cleaner on mobile */
+  }
+
+  /* Make dropdown inside iframe readable */
+  iframe * select {
+    font-size: 1rem !important;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 420px) {
+
+  #animation iframe {
+    height: 260px !important;
+  }
+
+  #animation h2 {
+    font-size: 1.1rem;
+  }
+}
 
 </style>
 </head>
