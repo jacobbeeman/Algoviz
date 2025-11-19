@@ -127,7 +127,6 @@
       .viz-row{flex-direction:column}
       .right{width:100%}
     }
-
   </style>
 </head>
 <body>
@@ -180,7 +179,6 @@
           <div style="display:flex;gap:8px;align-items:center">
             <label for="size">Elements</label>
             <select id="size">
-              <option value="10">5</option>
               <option value="10">10</option>
               <option value="20" selected>20</option>
               <option value="30">30</option>
@@ -201,6 +199,24 @@
           </div>
         </div>
 
+            <!-- Text PopUP Helper --> 
+<div id="searching msg" 
+     style="text-align:center; 
+            font-weight:800; 
+            margin-top:10px; 
+            font-size:18px; 
+            color:#0f172a;">
+</div>
+
+<div id="arrow" 
+     style="position:absolute; 
+            width:0; 
+            height:0;
+            border-left:10px solid transparent;
+            border-right:10px solid transparent;
+            border-bottom:20px solid #db4d15;
+            display:none;">
+</div>
       </aside>
     </div>
  
@@ -275,9 +291,8 @@
   // Algorithm step recorders (pure JS)
   // ----------------------
 
-  // !!Bubble sort: records compare and swap steps; returns steps array
-  function bubbleSortSteps(arr)
-  {
+  // Bubble sort: records compare and swap steps; returns steps array
+  function bubbleSortSteps(arr){
     const a = arr.slice(); // copy
     const s = [];
     const n = a.length;
@@ -449,7 +464,7 @@
     counters = { comps:0, swaps:0, iter:0 };
     steps = [];
 
-    const n = parseInt(sizeSelect.value,5) || 10;
+    const n = parseInt(sizeSelect.value,10) || 20;
 
     if(modeSelect.value === 'bars')
     {
