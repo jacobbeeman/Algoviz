@@ -176,7 +176,6 @@ pre, code {
 }
 
 /* ---------------- Hero ---------------- */
-/* ---------------- Hero ---------------- */
 .hero {
   display: block;                 /* full width card */
   margin-bottom: 60px;
@@ -253,18 +252,40 @@ pre, code {
 }
 
 #animation h2 {
-  margin-bottom: 20px;
   font-family: 'Orbitron', sans-serif;
-  color: #0a71ff;
+  font-size: 2rem;
+  letter-spacing: 3px;
   text-transform: uppercase;
-  letter-spacing: 1px;
+
+  /* Animated gradient */
+  background: linear-gradient(90deg, #ff00ff, #0a71ff, #00faff);
+  background-size: 300% 300%;
+  animation: glowShift 6s ease infinite;
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  /* Glow around letters */
+  text-shadow: 
+      0 0 12px rgba(255,0,255,0.5),
+      0 0 25px rgba(10,113,255,0.5),
+      0 0 35px rgba(0,255,255,0.4);
+
+  margin-bottom: 25px;
+}
+
+/* Keyframes for shifting neon gradient */
+@keyframes glowShift {
+  0%   { background-position:   0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position:   0% 50%; }
 }
 
 #animation iframe {
   display: block;
   width: 100%;
   max-width: 100%;
-  height: 600px;
+  height: 750px;
   border: none;
   border-radius: 12px;
   overflow: hidden;
@@ -468,14 +489,15 @@ footer {
 
     
 <section id="animation">
-  <h2>Binary Search Visualization</h2>
+  <h2>Visualization</h2>
   <iframe 
-      src="https://algoviz-1.onrender.com/"
-      width="100%"
-      height="600px"
+      src="Frontend_Animation.html" 
+      width="100%" 
+      height="600px" 
       style="border:none; border-radius:10px;">
   </iframe>
 </section>
+
 
 
             
