@@ -379,7 +379,8 @@
   }
 
 // Selection Sort (in-place)
-  function selectionSortSteps(arr) {
+  function selectionSortSteps(arr) 
+  {
     const a = arr.slice();
     const s = [];
 
@@ -410,7 +411,78 @@
    return s;
   }
 
+// Merge Sort steps (records compare + overwrite actions)
+  // Quick Sort steps (records compare + swap)
+  function quickSortSteps(arr) {
+   const a = arr.slice();
+    const s = [];
 
+    function qs(left, right) {
+     if (left >= right) return;
+
+     const pivot = a[Math.floor((left + right) / 2)];
+     let i = left, j = right;
+
+      while (i <= j) 
+      {
+        while (a[i] < pivot) 
+        {
+         s.push({ compare:[i], array: a.slice() });
+          counters.comps++;
+         i++;
+       }
+       while (a[j] > pivot) 
+       {
+         s.push({ compare:[j], array: a.slice() });
+         counters.comps++;
+         j--;
+       }
+
+        if (i <= j) {
+          const temp = a[i];
+         a[i] = a[j];
+         a[j] = temp;
+
+          s.push({ swap:[i, j], array: a.slice() });
+          counters.swaps++;
+
+         i++;
+          j--;
+       }
+     }
+
+     qs(left, j);
+     qs(i, right);
+    }
+
+   qs(0, a.length - 1);
+   return s;
+  }
+
+
+// Linear search steps (visual, checks each index one by one)
+  function linearSearchSteps(arr, target)
+  {
+   const s = [];               // store steps
+    const a = arr.slice();      // copy array
+  
+    for (let i = 0; i < a.length; i++)
+   {
+      // step showing which index we're checking
+      s.push({ compare: [i], array: a.slice() });
+      counters.comps++;
+
+      if (a[i] === target)
+     {
+       // found target
+       s.push({ found: i, array: a.slice() });
+        return s;
+      }
+   }
+
+   // not found
+    return s;
+  }
 
 
 
@@ -531,8 +603,10 @@
       } else if(algo === 'selection')
       {
         steps = selectionSortSteps(elements);
-      }else
+      }else if(algo === 'quick') 
       {
+        steps = quickSortSteps(elements);
+      }else {
         // default fallback
         steps = bubbleSortSteps(elements);
       }
@@ -555,17 +629,28 @@
         const pickExisting = Math.random() < 0.7;
         const target = pickExisting ? elements[Math.floor(Math.random()*elements.length)] : Math.floor(Math.random()*200)+200;
         steps = binarySearchSteps(elements, target);
-      } else 
+      } else if(algo === 'linear')
       {
-        steps = []; // no steps for unknown
-      }
-      buildTimelineForSteps('nodes');
-    }
+       // target chosen like binary search
+       const pickExisting = Math.random() < 0.7;
+       const target = pickExisting ? 
+         elements[Math.floor(Math.random()*elements.length)] : 
+          Math.floor(Math.random()*200)+200;
 
-    // reset iteration counter (timeline will call increment functions as it plays)
-    counters.iter = 0;
-    updateCountersDisplay();
+        // run linear search steps
+       steps = linearSearchSteps(elements, target);
+      }else 
+      {
+       steps = [];
+      }
+
+    buildTimelineForSteps('nodes');
   }
+
+  counters.iter = 0;
+  updateCountersDisplay();
+}
+      
 
   // ----------------------
   // Control handlers
