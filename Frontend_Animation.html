@@ -147,7 +147,6 @@
       <!-- Left: visualization and controls -->
       <div class="card visual">
         <div style="display:flex;justify-content:space-between;align-items:center">
-          <div style="font-weight:800">Visualization</div>
           <!-- Inline counters (horizontal) -->
           <div class="inline-counters">
             <div id="comparisons">Comparisons: 0</div>
@@ -187,6 +186,18 @@
               <option value="30">30</option>
             </select>
           </div>
+
+<!-- Speed selector -->
+<div style="display:flex;gap:8px;align-items:center">
+  <label for="speed">Speed</label>
+  <select id="speed">
+    <option value="slow">Slow</option>
+    <option value="medium" selected>Medium</option>
+    <option value="fast">Fast</option>
+  </select>
+</div>
+
+
         </div>
 
       <!-- Right-side info / controls -->
@@ -281,6 +292,20 @@
     });
     domEls = Array.from(visCanvas.children);
   }
+
+const speedSelect = document.getElementById('speed');
+
+// Returns animation timing based on speed dropdown
+function getSpeed() {
+  const val = speedSelect.value;
+
+  if (val === "slow") return { compare: 0.6, swap: 0.6, pause: 0.3 };
+  if (val === "fast") return { compare: 0.12, swap: 0.12, pause: 0.05 };
+
+  // default = medium
+  return { compare: 0.3, swap: 0.3, pause: 0.15 };
+}
+  
 
   function renderNodes(arr)
   {
@@ -507,26 +532,49 @@
 
     steps.forEach((st, idx)=>
       {
-      if(st.compare)
+      if(st.compare) 
       {
-        // highlight bar element when comparing
-        if(mode === 'bars')
-        {
-          const [i,j] = st.compare;
-          timeline.to([domEls[i], domEls[j]], { backgroundColor: "#facc15", duration: compareDuration }, "+=0");
-          timeline.to([domEls[i], domEls[j]], { backgroundColor: "", duration: compareDuration }, "+=" + pauseBetween);
-        } else 
-        {
-          // highlight node element
-          const [i] = st.compare;
-          timeline.to(domEls[i], { scale:1.12, borderColor:"#facc15", duration: compareDuration }, "+=0");
-          timeline.to(domEls[i], { scale:1, borderColor:"rgba(15,23,42,0.06)", duration: compareDuration }, "+=" + pauseBetween);
-        }
-        // increment comparisons counter when timeline reaches this point
-        timeline.call(()=> { counters.comps++; updateCountersDisplay(); });
-      }
+  const speeds = getSpeed();
 
-      if(st.swap){
+  if(mode === 'bars') {
+      const [i,j] = st.compare;
+
+      timeline.to([domEls[i], domEls[j]], 
+      {
+        backgroundColor: "#facc15",
+        duration: speeds.compare
+      });
+
+      timeline.to([domEls[i], domEls[j]], 
+      {
+        backgroundColor: "",
+        duration: speeds.compare
+      }, "+=" + speeds.pause);
+
+  } else {
+      const [i] = st.compare;
+
+      timeline.to(domEls[i],
+      {
+        scale: 1.2,
+        borderColor: "#facc15",
+        duration: speeds.compare
+      });
+
+      timeline.to(domEls[i], 
+      {
+        scale: 1,
+        borderColor: "rgba(15,23,42,0.06)",
+        duration: speeds.compare
+      }, "+=" + speeds.pause);
+  }
+
+  timeline.call(()=> { counters.comps++; updateCountersDisplay(); });
+}
+
+
+      if(st.swap)
+      {
         // swap animation: visually swap heights (bars) or swap text (nodes)
         const [i,j] = st.swap;
         if(mode === 'bars')
@@ -670,13 +718,36 @@
           <option value="linear">Linear Search</option>
       `;
 
-     if (mode === "bars") {
+     if (mode === "bars") 
+     {
           algoSelect.innerHTML = sortOptions;
           algoSelect.value = "bubble";
-     } else {
+     } else 
+     {
           algoSelect.innerHTML = searchOptions;
           algoSelect.value = "binary";
      }
+
+     const arrow = document.getElementById("arrow");
+const msg = document.getElementById("searching msg");
+
+// Move arrow above a node
+function arrowPointTo(i) {
+    const el = domEls[i];
+    const rect = el.getBoundingClientRect();
+
+    arrow.style.display = "block";
+    arrow.style.position = "fixed";
+    arrow.style.left = (rect.left + rect.width/2 - 10) + "px";
+    arrow.style.top = (rect.top - 30) + "px";
+}
+
+// Clear arrow + message
+function clearSearchUI() {
+    arrow.style.display = "none";
+    msg.textContent = "";
+}
+
   }
 
 
