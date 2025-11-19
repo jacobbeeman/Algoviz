@@ -9,7 +9,6 @@ from algorithms.pathfinding import BFS, DFS
 app = Flask(__name__)
 CORS(app)
 
-# Map algorithm names to classes
 ALGORITHMS = {
     "bubble_sort": BubbleSort,
     "quick_sort": QuickSort,
@@ -19,16 +18,23 @@ ALGORITHMS = {
     "dfs": DFS
 }
 
-# Initialize the visualizer
 visualizer = AlgorithmVisualizer(ALGORITHMS)
 
+# ---------------------------
+# SERVE FRONTEND PAGE
+# ---------------------------
 @app.route("/")
 def home():
-    return "Backend is running!"
+    return render_template("Frontend_Animation.html")
 
+
+# ---------------------------
+# API ROUTES
+# ---------------------------
 @app.route("/api/algorithms", methods=["GET"])
 def list_algorithms():
     return jsonify({"algorithms": list(ALGORITHMS.keys())})
+
 
 @app.route("/api/run", methods=["POST"])
 def run_algorithm():
@@ -42,10 +48,10 @@ def run_algorithm():
     if name not in ALGORITHMS:
         return jsonify({"error": f"Unknown algorithm '{name}'"}), 404
 
-    # Switch the current algorithm
+    # switch selected algorithm
     visualizer.switch_algorithm(name)
 
-    # Convert frontend "array" field → visualizer "data" field
+    # frontend sends "array" → backend uses "data"
     if "array" in body:
         body["data"] = body["array"]
 
@@ -60,12 +66,5 @@ def run_algorithm():
     })
 
 
-@app.route("/animation")
-def animation():
-    return render_template("Frontend_Animation.html")
-
 if __name__ == "__main__":
-    # Use 0.0.0.0 for Render deployment
     app.run(host="0.0.0.0", port=5000, debug=True)
-
-
