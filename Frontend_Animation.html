@@ -73,6 +73,21 @@
   overflow: hidden; /* keeps everything neat inside */
 }
 
+/* Highlight animation for comparisons/swaps for bar*/
+.bar.highlight 
+{
+  background: #65d84e; 
+  animation: upAndDownScale 0.6s ease-in-out;
+}
+
+@keyframes upAndDownScale 
+{
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+
     /* Bar styles */
     .bar 
   {
@@ -179,6 +194,7 @@
           <div style="display:flex;gap:8px;align-items:center">
             <label for="size">Elements</label>
             <select id="size">
+              <option value="5">5</option>
               <option value="10">10</option>
               <option value="20" selected>20</option>
               <option value="30">30</option>
@@ -266,7 +282,8 @@
   function renderBars(arr)
   {
     visCanvas.innerHTML = '';
-    arr.forEach(v=>{
+    arr.forEach(v=>
+    {
       const d = document.createElement('div');
       d.className = 'bar';
       d.style.height = v + 'px';
@@ -278,7 +295,8 @@
   function renderNodes(arr)
   {
     visCanvas.innerHTML = '';
-    arr.forEach(v=>{
+    arr.forEach(v=>
+    {
       const d = document.createElement('div');
       d.className = 'node';
       d.textContent = v;
@@ -292,11 +310,13 @@
   // ----------------------
 
   // Bubble sort: records compare and swap steps; returns steps array
-  function bubbleSortSteps(arr){
+  function bubbleSortSteps(arr)
+  {
     const a = arr.slice(); // copy
     const s = [];
     const n = a.length;
-    for(let pass=0; pass<n; pass++){
+    for(let pass=0; pass<n; pass++)
+    {
       counters.iter = pass+1; // count passes (iterations)
       for(let j=0;j<n-pass-1;j++){
         s.push({ compare:[j,j+1], array: a.slice() });
@@ -549,12 +569,12 @@
     // mode changed: re-render immediately to show correct elements
     if(modeSelect.value === 'bars')
     {
-      elements = randomArray(parseInt(sizeSelect.value,5));
+      elements = randomArray(parseInt(sizeSelect.value,10));
       renderBars(elements);
       algoSelect.value = 'bubble';
     } else 
     {
-      elements = randomArray(parseInt(sizeSelect.value,5)).sort((a,b)=>a-b);
+      elements = randomArray(parseInt(sizeSelect.value,10)).sort((a,b)=>a-b);
       renderNodes(elements);
       algoSelect.value = 'binary';
     }
@@ -569,10 +589,10 @@
     // if switching algos within same mode, re-render dataset
     if(modeSelect.value === 'bars')
     {
-      elements = randomArray(parseInt(sizeSelect.value,5));
+      elements = randomArray(parseInt(sizeSelect.value,10));
       renderBars(elements);
     } else {
-      elements = randomArray(parseInt(sizeSelect.value,5)).sort((a,b)=>a-b);
+      elements = randomArray(parseInt(sizeSelect.value,10)).sort((a,b)=>a-b);
       renderNodes(elements);
     }
     if(timeline){ timeline.kill(); timeline=null; }
@@ -585,11 +605,11 @@
     // update preview dataset when size changes
     if(modeSelect.value === 'bars')
     {
-      elements = randomArray(parseInt(sizeSelect.value,5));
+      elements = randomArray(parseInt(sizeSelect.value,10));
       renderBars(elements);
     } else
     { 
-      elements = randomArray(parseInt(sizeSelect.value,5)).sort((a,b)=>a-b);
+      elements = randomArray(parseInt(sizeSelect.value,10)).sort((a,b)=>a-b);
       renderNodes(elements);
     }
     if(timeline){ timeline.kill(); timeline=null; }
