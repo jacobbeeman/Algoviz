@@ -922,125 +922,108 @@ footer {
         <!--Description part-->
         
         
-        <section id="algodescription">
-            <h2>Algorithm Descriptions</h2>
-            <p>Short and simple description to turn code and diagrams into understandable information</p>
-            <div div class="grid" style="margin-top:12px">
-                <div class="card">
-                    <h3>Binary search</h3>
-                    <p>
-                        A efficient algorithm used to find a specific value in a sorted list. It works by repeatedly
-                        dividing the list in half and comparing the target value to the middle element. If the target
-                        is smaller, the search continues in the left half; if it’s larger, it continues in the right
-                        half.
-                        This process repeats until the value is found or the list can’t be divided any further. Binary
-                        Search
-                        is much faster than checking each element one by one, but it only works correctly on data that
-                        is already sorted.
-                    </p>
-                    <h3>Big O complexities</h3>
-                    <ul>
-                        <li><b>Best Case:</b> O(1)</li>
-                        <li><b>Average Case:</b>O(log n)</li>
-                        <li><b>Worst Case: </b>O(log n)</li>
-                    </ul>
-                </div>
-                </div>
-                <div class="card">
-                    <h3>Bubble Sort</h3>
-                    <p>
-                        A simple sorting algorithm that works by repeatedly comparing pairs
-                        of neighboring elements and swapping them if they are in the wrong order. This
-                        process continues until no more swaps are needed, meaning the list is sorted.
-                        The largest values “bubble up” to the end of the list after each pass, which is
-                        how it gets its name. While easy to understand and great for learning, Bubble Sort
-                        is not very efficient for large datasets because it has to make many comparisons and swaps.
-                    </p>
-                    <h3>Big O complexities</h3>
-                    <ul>
-                        <li><b>Best Case:</b> O(n)</li>
-                        <li><b>Average Case:</b>O(n<sup>2</sup>)</li>
-                        <li><b>Worst Case: </b>O(n<sup>2</sup>)</li>
-                    </ul>
-                </div>
+       <section id="algodescription">
+    <h2>Algorithm Descriptions</h2>
+    <p>Short and simple description to turn code and diagrams into understandable information</p>
 
-                <div class="card">
-                    <h3>Insertion Sort</h3>
-                    <p>
-                        A straightforward sorting algorithm that builds a sorted list one element at a time.
-                        It works by taking one item from the unsorted part of the list and inserting it into
-                        its correct position in the sorted part, just like sorting playing cards in your hand.
-                        This process repeats until all elements are in order. Insertion Sort is simple to understand
-                        and efficient for small or nearly sorted datasets, but it becomes slower when working with large
-                        amounts of data.
-                    </p>
-                    <h3>Big O complexities</h3>
-                    <ul>
-                        <li><b>Best Case:</b> O(n)</li>
-                        <li><b>Average Case:</b>O(n<sup>2</sup>)</li>
-                        <li><b>Worst Case: </b>O(n<sup>2</sup>)</li>
-                    </ul>
-                </div>
-                <div class="card">
-                    <h3>Binary search</h3>
-                    <p>
-                        A efficient algorithm used to find a specific value in a sorted list. It works by repeatedly
-                        dividing the list in half and comparing the target value to the middle element. If the target
-                        is smaller, the search continues in the left half; if it’s larger, it continues in the right
-                        half.
-                        This process repeats until the value is found or the list can’t be divided any further. Binary
-                        Search
-                        is much faster than checking each element one by one, but it only works correctly on data that
-                        is already sorted.
-                    </p>
-                    <h3>Big O complexities</h3>
-                    <ul>
-                        <li><b>Best Case:</b> O(1)</li>
-                        <li><b>Average Case:</b>O(log n)</li>
-                        <li><b>Worst Case: </b>O(log n)</li>
-                    </ul>
-                </div>
-                <div class="card">
-                    <h3>Quick Sort</h3>
-                    <p>
-                        A fast and efficient sorting algorithm that works by selecting a pivot element and dividing the
-                        list
-                        into two smaller lists — one with values less than the pivot and one with values greater than
-                        the pivot.
-                        It then repeats this process (recursively) on the smaller lists until everything is sorted.
-                        Quick Sort is
-                        known for its divide-and-conquer approach and usually runs very quickly, especially on large
-                        datasets.
-                    </p>
-                    <h3>Big O complexities</h3>
-                    <ul>
-                        <li><b>Best Case:</b> O(n log n)</li>
-                        <li><b>Average Case:</b>O(n log n)</li>
-                        <li><b>Worst Case: </b>O(n<sup>2</sup>)</li>
-                    </ul>
-                </div>
-                <div class="card">
-                    <h3>Linear Search</h3>
-                    <p>
-                        A basic search algorithm that looks for a specific value by checking each element in a list, one
-                        by one,
-                        from start to finish. If it finds the value, it stops and returns the position; if not, it goes
-                        through
-                        the entire list. Linear Search is easy to understand and works on any list, whether it’s sorted
-                        or not,
-                        but it can be slow for very large datasets.
-                    </p>
-                    <h3>Big O complexities</h3>
-                    <ul>
-                        <li><b>Best Case:</b> O(1)</li>
-                        <li><b>Average Case:</b>O(n)</li>
-                        <li><b>Worst Case: </b>O(n)</li>
-                    </ul>
-                </div>
+    <div class="grid" style="margin-top:12px">
 
-                
-            </div>
-        </section>
+        <!-- Algorithm: Algorithm (A) -->
+        <div class="card">
+            <h3>Binary Search</h3>
+            <p>
+                Binary Search is an efficient search algorithm used to find a specific value in a sorted list.
+                It repeatedly divides the list in half, comparing the target with the middle element.
+                If the target is smaller, the search continues in the left half; if larger, in the right half.
+                This continues until the value is found or the range is empty.
+            </p>
+            <h3>Big O complexities</h3>
+            <ul>
+                <li><b>Best Case:</b> O(1)</li>
+                <li><b>Average Case:</b> O(log n)</li>
+                <li><b>Worst Case:</b> O(log n)</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>Bubble Sort</h3>
+            <p>
+                Bubble Sort repeatedly compares each pair of adjacent items and swaps them if they are out of order.
+                This process continues until no swaps are needed, meaning the list is sorted.
+                The largest values “bubble up” to the end with each pass.
+            </p>
+            <h3>Big O complexities</h3>
+            <ul>
+                <li><b>Best Case:</b> O(n)</li>
+                <li><b>Average Case:</b> O(n²)</li>
+                <li><b>Worst Case:</b> O(n²)</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>Insertion Sort</h3>
+            <p>
+                Insertion Sort builds a sorted list one element at a time by inserting each new element into its proper
+                position among the already-sorted items, similar to sorting playing cards in your hand.
+            </p>
+            <h3>Big O complexities</h3>
+            <ul>
+                <li><b>Best Case:</b> O(n)</li>
+                <li><b>Average Case:</b> O(n²)</li>
+                <li><b>Worst Case:</b> O(n²)</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>Linear Search</h3>
+            <p>
+                Linear Search checks each element in the list one by one from start to finish.
+                It works on both sorted and unsorted data but can be slow on large datasets because it may need to
+                check every element.
+            </p>
+            <h3>Big O complexities</h3>
+            <ul>
+                <li><b>Best Case:</b> O(1)</li>
+                <li><b>Average Case:</b> O(n)</li>
+                <li><b>Worst Case:</b> O(n)</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>Quick Sort</h3>
+            <p>
+                Quick Sort uses a divide-and-conquer strategy by selecting a pivot and partitioning the array into
+                elements less than and greater than the pivot.
+                It recursively sorts each partition until the whole array is sorted.
+            </p>
+            <h3>Big O complexities</h3>
+            <ul>
+                <li><b>Best Case:</b> O(n log n)</li>
+                <li><b>Average Case:</b> O(n log n)</li>
+                <li><b>Worst Case:</b> O(n²)</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>Selection Sort</h3>
+            <p>
+                Selection Sort divides the array into a sorted and unsorted region.
+                It repeatedly finds the smallest element in the unsorted region and swaps it with the first unsorted
+                position.
+                It uses few swaps but still performs many comparisons.
+            </p>
+            <h3>Big O complexities</h3>
+            <ul>
+                <li><b>Best Case:</b> O(n²)</li>
+                <li><b>Average Case:</b> O(n²)</li>
+                <li><b>Worst Case:</b> O(n²)</li>
+                <li><b>Space Complexity:</b> O(1)</li>
+            </ul>
+        </div>
+
+    </div>
+</section>
+
 
         <!--Code Examples-->
 
