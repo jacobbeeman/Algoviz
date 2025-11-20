@@ -781,96 +781,86 @@ function clearSearchUI() {
     updateCountersDisplay();
   });
 
-  // When user changes mode or algorithm or size, re-render (but do not auto-start)
-  modeSelect.addEventListener("change", () => {
-    const mode = modeSelect.value;
+  // When user changes mode, re-render (but do not auto-start)
+modeSelect.addEventListener("change", () => {
+  const mode = modeSelect.value;
 
-    // Update dropdown options
-    updateAlgoOptionsForMode(mode);
+  // Update dropdown options based on mode
+  updateAlgoOptionsForMode(mode);
 
-    // Re-render the correct visualization
-    const n = parseInt(sizeSelect.value, 10);
+  // Re-render the correct visualization
+  const n = parseInt(sizeSelect.value, 10);
 
-    if (mode === "bars") {
-        elements = randomArray(n);
-        renderBars(elements);
-    } else {
-        elements = randomArray(n).sort((a, b) => a - b);
-        renderNodes(elements);
-    }
+  if (mode === "bars") {
+    elements = randomArray(n);
+    renderBars(elements);
+  } else {
+    elements = randomArray(n).sort((a, b) => a - b);
+    renderNodes(elements);
+  }
 
-    // Reset timeline & counters
-    if (timeline) { timeline.kill(); timeline = null; }
+  // Reset timeline & counters
+  if (timeline) { timeline.kill(); timeline = null; }
 
-    counters = { comps: 0, swaps: 0, iter: 0 };
-    updateCountersDisplay();
-  });
-
-  algoSelect.addEventListener("change", () => {
-    const algo = algoSelect.value;
-
-    if (["bubble", "insertion", "selection", "quick"].includes(algo)) {
-        modeSelect.value = "bars";
-        updateAlgoOptionsForMode("bars");
-    } else {
-        modeSelect.value = "nodes";
-        updateAlgoOptionsForMode("nodes");
-    }
-
-    // Re-render data based on new mode
-    sizeSelect.dispatchEvent(new Event("change"));
-  });
-
-
-  // Auto-switch visuals when algorithm changes
-algoSelect.addEventListener("change", () => {
-    const algo = algoSelect.value;
-
-    // Sorting algorithms → Bars mode
-    if (algo === "bubble" || algo === "insertion" || algo === "selection") {
-        modeSelect.value = "bars";
-    }
-
-    // Searching algorithms → Nodes mode
-    if (algo === "binary") {
-        modeSelect.value = "nodes";
-    }
-
-    // Force re-render so visuals update instantly
-    sizeSelect.dispatchEvent(new Event("change"));
+  counters = { comps: 0, swaps: 0, iter: 0 };
+  updateCountersDisplay();
 });
 
-  sizeSelect.addEventListener
-  ('change', ()=> 
-  {
-    // update preview dataset when size changes
-    if(modeSelect.value === 'bars')
-    {
-      elements = randomArray(parseInt(sizeSelect.value,10));
-      renderBars(elements);
-    } else
-    { 
-      elements = randomArray(parseInt(sizeSelect.value,10)).sort((a,b)=>a-b);
-      renderNodes(elements);
-    }
-    if(timeline){ timeline.kill(); timeline=null; }
-    counters = { comps:0, swaps:0, iter:0 };
-    updateCountersDisplay();
-  });
+// SINGLE algo change listener
+algoSelect.addEventListener("change", () => {
+  const algo = algoSelect.value;
 
-  // ----------------------
-  // Initial render (20 bars default)
-  // ----------------------
-  (function init()
-  {
-    // Force algorithm dropdown to match default mode ("bars")
-    updateAlgoOptionsForMode("bars");
+  // Auto-switch mode based on algorithm
+  if (["bubble", "insertion", "selection", "quick"].includes(algo)) {
+    modeSelect.value = "bars";
+  } else {
+    modeSelect.value = "nodes";
+  }
 
-    // default mode: bars, default algo: bubble, default size: 20
-    elements = randomArray(5);
+  // We ONLY change mode here; we DO NOT call updateAlgoOptionsForMode
+  // so we don't wipe out the user's selection.
+
+  // Re-render based on new mode & size
+  sizeSelect.dispatchEvent(new Event("change"));
+});
+
+sizeSelect.addEventListener("change", () => {
+  const n = parseInt(sizeSelect.value, 10);
+
+  // update preview dataset when size changes
+  if (modeSelect.value === "bars") {
+    elements = randomArray(n);
     renderBars(elements);
-    updateCountersDisplay();
-  })();
+  } else {
+    elements = randomArray(n).sort((a, b) => a - b);
+    renderNodes(elements);
+  }
+
+  if (timeline) { timeline.kill(); timeline = null; }
+  counters = { comps: 0, swaps: 0, iter: 0 };
+  updateCountersDisplay();
+});
+
+// ----------------------
+// Initial render
+// ----------------------
+(function init() {
+  // default mode: bars
+  modeSelect.value = "bars";
+  updateAlgoOptionsForMode("bars");
+
+  // default algo: bubble (if present in your options)
+  algoSelect.value = "bubble";
+
+  // default size: make sure sizeSelect has this value in the HTML
+  // or set it here and dispatch change:
+  // sizeSelect.value = "20";
+
+  elements = randomArray(5); // or 20 if you want 20 bars
+  renderBars(elements);
+  updateCountersDisplay();
+})();
+
 
   </script>
 </body>
