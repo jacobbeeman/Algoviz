@@ -675,6 +675,156 @@ footer {
   border-radius: 0 !important;
 }
 
+/* ---------------- Dark Mode Toggle Button ---------------- */
+.dark-toggle {
+  background: #0a71ff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  cursor: pointer;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 14px;
+  transition: 0.3s ease;
+}
+.dark-toggle:hover {
+  background: #ff00ff;
+  box-shadow: 0 0 8px #ff00ff80;
+}
+
+/* ---------------- Dark Mode Styles ---------------- */
+.dark-mode {
+  background: #0b0b12 !important;
+  color: #f0f0f5 !important;
+}
+
+.dark-mode .card {
+  background: #1a1a24 !important;
+  color: #e5e5f0;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+}
+
+.dark-mode h1, 
+.dark-mode h2, 
+.dark-mode h3, 
+.dark-mode h4 {
+  color: #7eb6ff !important;
+  text-shadow: none;
+}
+
+.dark-mode .btn {
+  background: #7c3aed !important;
+  color: white !important;
+}
+.dark-mode .btn:hover {
+  background: #ff00ff !important;
+}
+
+.dark-mode pre, 
+.dark-mode code {
+  background: #111 !important;
+  color: #00eaff !important;
+}
+
+.dark-mode .feature-card {
+  background: #1a1a24 !important;
+  border-color: #333 !important;
+}
+
+.dark-mode .nav {
+  background: transparent;
+}
+
+.dark-mode footer {
+  color: #ccc;
+}
+
+/* Banner */
+.dark-mode .support-banner {
+  background: linear-gradient(90deg,#1a1a24,#333);
+}
+
+/* ---------------- Dark Mode Toggle Button ---------------- */
+.dark-toggle {
+  background: transparent;
+  border: 2px solid #0a71ff;
+  color: #0a71ff;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  font-size: 22px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: all 0.3s ease;
+}
+
+.dark-toggle:hover {
+  background: #0a71ff;
+  color: white;
+  box-shadow: 0 0 10px #0a71ff90;
+}
+
+/* ---- Dark Mode Colors ---- */
+.dark-mode {
+  background: #0b0b12 !important;
+  color: #f0f0f5 !important;
+}
+
+/* Cards */
+.dark-mode .card {
+  background: #1a1a24 !important;
+  color: #ddd;
+  box-shadow: 0 0 12px rgba(0,0,0,0.5);
+}
+
+/* Headers */
+.dark-mode h1,
+.dark-mode h2,
+.dark-mode h3,
+.dark-mode h4 {
+  color: #7eb6ff !important;
+  text-shadow: none;
+}
+
+/* Buttons */
+.dark-mode .btn {
+  background: #7c3aed !important;
+  color: white !important;
+}
+.dark-mode .btn:hover {
+  background: #ff00ff !important;
+}
+
+/* Code Blocks */
+.dark-mode pre,
+.dark-mode code {
+  background: #111 !important;
+  color: #00eaff !important;
+}
+
+/* Navigation */
+.dark-mode .nav {
+  background: transparent !important;
+}
+
+/* Feature cards */
+.dark-mode .feature-card {
+  background: #1a1a24 !important;
+  border-color: #333 !important;
+}
+
+/* Footer */
+.dark-mode footer {
+  color: #ccc;
+}
+
+/* Banner */
+.dark-mode .support-banner {
+  background: linear-gradient(90deg, #1a1a24, #333);
+}
+
+
 
 </style>
 </head>
@@ -702,6 +852,9 @@ footer {
                 <a class="btn" href="#codexample">Code Examples</a>
                 <a class="btn" href="#about">About Us</a>
                 <a class="btn" href="#glossary">Glossary</a>
+                <button class="dark-toggle" id="darkModeBtn" onclick="toggleDarkMode()">🌙</button>
+
+
             </div>
         </nav>
        <section class="hero">
@@ -1445,6 +1598,32 @@ container.addEventListener("click", () => {
         isFullscreen = false;
     }
 });
+</script>
+
+<script>
+  // Load saved theme on page load
+  document.addEventListener("DOMContentLoaded", () => {
+    const isDark = localStorage.getItem("theme") === "dark";
+    if (isDark) {
+      document.body.classList.add("dark-mode");
+      document.getElementById("darkModeBtn").textContent = "☀️";
+    }
+  });
+
+  function toggleDarkMode() {
+    const body = document.body;
+    const btn = document.getElementById("darkModeBtn");
+
+    body.classList.toggle("dark-mode");
+
+    if (body.classList.contains("dark-mode")) {
+      btn.textContent = "☀️";       // switch to sun
+      localStorage.setItem("theme", "dark");
+    } else {
+      btn.textContent = "🌙";       // switch to moon
+      localStorage.setItem("theme", "light");
+    }
+  }
 </script>
 
 
